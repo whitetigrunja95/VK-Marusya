@@ -13,4 +13,9 @@ export type Movie = {
   tmdbRating?: number;
   imdbRating?: number;
   trailerUrl?: string;
+  language?: string;
+  budget?: string | number;
+  revenue?: string | number;
+  director?: string;
+  actors?: string[];
 };

@@ -1,0 +1,56 @@
+.genres-page {
+  padding-top: 32px;
+}
+
+.genres-page__title {
+  margin: 0 0 48px;
+  color: #ffffff;
+  font-size: 48px;
+  line-height: 1.08;
+  font-weight: 700;
+}
+
+.genres-page__message {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 20px;
+}
+
+.genres-page__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px 24px;
+}
+
+@media (max-width: 1200px) {
+  .genres-page__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .genres-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .genres-page {
+    padding-top: 20px;
+  }
+
+  .genres-page__title {
+    margin-bottom: 28px;
+    font-size: 32px;
+    line-height: 1.12;
+  }
+
+  .genres-page__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .genres-page__message {
+    font-size: 16px;
+  }
+}

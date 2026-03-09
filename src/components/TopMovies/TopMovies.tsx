@@ -5,62 +5,56 @@ import { MovieCard } from "../MovieCard/MovieCard";
 import "./TopMovies.css";
 
 export const TopMovies = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
 
-  const loadTopMovies = async () => {
-    try {
-      setHasError(false);
-      setIsLoading(true);
+    const loadTopMovies = async () => {
+        try {
+            setHasError(false);
+            setIsLoading(true);
 
-      const topMovies = await getTopMovies();
-      setMovies(topMovies.slice(0, 10));
-    } catch (error) {
-      console.error("Не удалось загрузить топ фильмов:", error);
-      setHasError(true);
-    } finally {
-      setIsLoading(false);
+            const topMovies = await getTopMovies();
+            setMovies(topMovies.slice(0, 10));
+        } catch (error) {
+            console.error("Не удалось загрузить топ фильмов:", error);
+            setHasError(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        void loadTopMovies();
+    }, []);
+
+    if (isLoading) {
+        return (
+            <section className="top-movies">
+                <h2 className="top-movies__title">Топ 10 фильмов</h2>
+                <p className="top-movies__message">Загрузка фильмов...</p>
+            </section>
+        );
     }
-  };
 
-  useEffect(() => {
-    void loadTopMovies();
-  }, []);
+    if (hasError) {
+        return (
+            <section className="top-movies">
+                <h2 className="top-movies__title">Топ 10 фильмов</h2>
+                <p className="top-movies__message">Не удалось загрузить список фильмов.</p>
+            </section>
+        );
+    }
 
-  if (isLoading) {
     return (
-      <section className="top-movies">
-        <h2 className="top-movies__title">Топ 10 фильмов</h2>
-        <p className="top-movies__message">Загрузка фильмов...</p>
-      </section>
+        <section className="top-movies">
+            <h2 className="top-movies__title">Топ 10 фильмов</h2>
+
+            <div className="top-movies__grid">
+                {movies.map((movie, index) => (
+                    <MovieCard key={movie.id} movie={movie} rank={index + 1} />
+                ))}
+            </div>
+        </section>
     );
-  }
-
-  if (hasError) {
-    return (
-      <section className="top-movies">
-        <h2 className="top-movies__title">Топ 10 фильмов</h2>
-        <p className="top-movies__message">Не удалось загрузить список фильмов.</p>
-      </section>
-    );
-  }
-
-  return (
-    <section className="top-movies">
-      <h2 className="top-movies__title">Топ 10 фильмов</h2>
-
-      <div className="top-movies__grid">
-        {movies.map((movie, index) => (
-          <MovieCard
-            key={movie.id}
-            id={movie.id}
-            title={movie.title}
-            posterUrl={movie.posterUrl}
-            rank={index + 1}
-          />
-        ))}
-      </div>
-    </section>
-  );
 };

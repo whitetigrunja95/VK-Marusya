@@ -20,3 +20,8 @@ export const getMovieById = async (id: string): Promise<Movie> => {
   const response = await apiClient.get(`/movie/${id}`);
   return response.data;
 };
+
+export const getMoviesByGenre = async (genre: string): Promise<Movie[]> => {
+  const response = await apiClient.get(`/movie?genre=${genre}`);
+  return response.data;
+};

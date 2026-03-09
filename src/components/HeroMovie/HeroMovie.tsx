@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import heartIcon from "../../assets/icons/heart.svg";
 import refreshIcon from "../../assets/icons/refresh.svg";
 import { getRandomMovie } from "../../api/moviesApi";
 import type { Movie } from "../../types/movie";
 import "./HeroMovie.css";
+
+type HeroMovieProps = {
+  movie?: Movie;
+  showRefreshButton?: boolean;
+  showAboutButton?: boolean;
+};
 
 const formatRuntime = (minutes?: number) => {
   if (!minutes) {
@@ -20,19 +26,32 @@ const formatRuntime = (minutes?: number) => {
   return `${hours} ч ${remainingMinutes} мин`;
 };
 
-export const HeroMovie = () => {
-  const [movie, setMovie] = useState<Movie | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export const HeroMovie = ({
+  movie: movieFromProps,
+  showRefreshButton = true,
+  showAboutButton = true,
+}: HeroMovieProps) => {
+  const [randomMovie, setRandomMovie] = useState<Movie | null>(null);
+  const [isLoading, setIsLoading] = useState(!movieFromProps);
   const [hasError, setHasError] = useState(false);
 
+  const isExternalMovie = Boolean(movieFromProps);
+
+  const movie = useMemo(() => {
+    return movieFromProps ?? randomMovie;
+  }, [movieFromProps, randomMovie]);
+
   const loadRandomMovie = async () => {
+    if (isExternalMovie) {
+      return;
+    }
+
     try {
       setHasError(false);
       setIsLoading(true);
 
-      const randomMovie = await getRandomMovie();
-      console.log("randomMovie", randomMovie);
-      setMovie(randomMovie);
+      const nextMovie = await getRandomMovie();
+      setRandomMovie(nextMovie);
     } catch (error) {
       console.error("Не удалось загрузить случайный фильм:", error);
       setHasError(true);
@@ -42,8 +61,14 @@ export const HeroMovie = () => {
   };
 
   useEffect(() => {
+    if (movieFromProps) {
+      setIsLoading(false);
+      setHasError(false);
+      return;
+    }
+
     void loadRandomMovie();
-  }, []);
+  }, [movieFromProps]);
 
   if (isLoading) {
     return (
@@ -66,35 +91,29 @@ export const HeroMovie = () => {
               Не удалось загрузить фильм. Попробуй обновить страницу.
             </p>
 
-            <div className="hero-movie__actions">
-              <button
-                className="hero-movie__button hero-movie__button--primary"
-                type="button"
-                onClick={loadRandomMovie}
-              >
-                Попробовать снова
-              </button>
-            </div>
+            {!isExternalMovie && (
+              <div className="hero-movie__actions">
+                <button
+                  className="hero-movie__button hero-movie__button--primary"
+                  type="button"
+                  onClick={loadRandomMovie}
+                >
+                  Попробовать снова
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>
     );
   }
 
-  const rating =
-    movie.tmdbRating ??
-    movie.imdbRating ??
-    movie.rating;
+  const rating = movie.tmdbRating ?? movie.imdbRating ?? movie.rating;
 
   const description =
-    movie.plot ??
-    movie.description ??
-    "Описание пока недоступно";
+    movie.plot ?? movie.description ?? "Описание пока недоступно";
 
-  const imageUrl =
-    movie.backdropUrl ??
-    movie.posterUrl ??
-    "";
+  const imageUrl = movie.backdropUrl ?? movie.posterUrl ?? "";
 
   return (
     <section className="hero-movie">
@@ -123,19 +142,25 @@ export const HeroMovie = () => {
           <p className="hero-movie__description">{description}</p>
 
           <div className="hero-movie__actions">
-            <button
-              className="hero-movie__button hero-movie__button--primary"
-              type="button"
-            >
-              Трейлер
-            </button>
+            {movie.trailerUrl && (
+              <a
+                className="hero-movie__button hero-movie__button--primary hero-movie__link-button"
+                href={movie.trailerUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Трейлер
+              </a>
+            )}
 
-            <button
-              className="hero-movie__button hero-movie__button--secondary"
-              type="button"
-            >
-              О фильме
-            </button>
+            {showAboutButton && (
+              <a
+                className="hero-movie__button hero-movie__button--secondary hero-movie__link-button"
+                href="#about-movie"
+              >
+                О фильме
+              </a>
+            )}
 
             <button
               className="hero-movie__icon-button"
@@ -145,14 +170,16 @@ export const HeroMovie = () => {
               <img src={heartIcon} alt="" />
             </button>
 
-            <button
-              className="hero-movie__icon-button"
-              type="button"
-              aria-label="Показать другой фильм"
-              onClick={loadRandomMovie}
-            >
-              <img src={refreshIcon} alt="" />
-            </button>
+            {showRefreshButton && !isExternalMovie && (
+              <button
+                className="hero-movie__icon-button"
+                type="button"
+                aria-label="Показать другой фильм"
+                onClick={loadRandomMovie}
+              >
+                <img src={refreshIcon} alt="" />
+              </button>
+            )}
           </div>
         </div>
 

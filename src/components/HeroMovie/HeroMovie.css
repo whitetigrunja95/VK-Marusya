@@ -65,12 +65,23 @@
 }
 
 .hero-movie__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   height: 56px;
   padding: 0 24px;
   border: none;
   border-radius: 28px;
+  font-family: inherit;
   font-size: 18px;
+  line-height: 1;
   font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
   transition:
     transform 0.2s ease,
     opacity 0.2s ease,
@@ -91,6 +102,13 @@
 .hero-movie__button--secondary {
   background: rgba(57, 59, 72, 0.75);
   color: #ffffff;
+}
+
+.hero-movie__link-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .hero-movie__icon-button {
@@ -179,13 +197,15 @@
   }
 
   .hero-movie__button {
-    height: 48px;
-    padding: 0 18px;
-    font-size: 16px;
-  }
+  height: 48px;
+  padding: 0 18px;
+  font-size: 16px;
+  line-height: 1;
+}
 
   .hero-movie__icon-button {
     width: 48px;
     height: 48px;
   }
+
 }

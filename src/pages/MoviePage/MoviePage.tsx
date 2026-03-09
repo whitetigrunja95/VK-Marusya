@@ -1,40 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import heartIcon from "../../assets/icons/heart.svg";
 import { getMovieById } from "../../api/moviesApi";
+import { HeroMovie } from "../../components/HeroMovie/HeroMovie";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
 import "./MoviePage.css";
 
-const formatRuntime = (minutes?: number) => {
-  if (!minutes) {
-    return "—";
-  }
-
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-
-  if (hours === 0) {
-    return `${remainingMinutes} мин`;
-  }
-
-  return `${hours} ч ${remainingMinutes} мин`;
-};
-
-const formatMoney = (value?: string | number) => {
-  if (!value) {
-    return "—";
-  }
-
-  if (typeof value === "string") {
-    return value;
-  }
-
-  return `$${value.toLocaleString()}`;
-};
-
 export const MoviePage = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+
   const [movie, setMovie] = useState<Movie | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -51,11 +25,10 @@ export const MoviePage = () => {
         setHasError(false);
         setIsLoading(true);
 
-        const movieData = await getMovieById(id);
-        console.log("movieById", movieData);
-        setMovie(movieData);
+        const movieFromApi = await getMovieById(id);
+        setMovie(movieFromApi);
       } catch (error) {
-        console.error("Не удалось загрузить страницу фильма:", error);
+        console.error("Не удалось загрузить фильм:", error);
         setHasError(true);
       } finally {
         setIsLoading(false);
@@ -65,118 +38,74 @@ export const MoviePage = () => {
     void loadMovie();
   }, [id]);
 
-  if (isLoading) {
-    return (
-      <MainLayout>
-        <section className="movie-page">
-          <p className="movie-page__message">Загрузка фильма...</p>
-        </section>
-      </MainLayout>
-    );
-  }
-
-  if (hasError || !movie) {
-    return (
-      <MainLayout>
-        <section className="movie-page">
-          <p className="movie-page__message">
-            Не удалось загрузить информацию о фильме.
-          </p>
-        </section>
-      </MainLayout>
-    );
-  }
-
-  const rating =
-    movie.tmdbRating ??
-    movie.imdbRating ??
-    movie.rating;
-
-  const description =
-    movie.plot ??
-    movie.description ??
-    "Описание пока недоступно.";
-
-  const imageUrl =
-    movie.backdropUrl ??
-    movie.posterUrl ??
-    "";
-
   return (
     <MainLayout>
       <section className="movie-page">
-        <div className="movie-page__hero">
-          <div className="movie-page__info">
-            <div className="movie-page__meta">
-              <span className="movie-page__rating">
-                {typeof rating === "number" ? rating.toFixed(1) : "—"}
-              </span>
+        {isLoading && (
+          <p className="movie-page__message">Загрузка фильма...</p>
+        )}
 
-              <span className="movie-page__meta-text">
-                {movie.releaseYear ?? "—"}
-              </span>
+        {hasError && (
+          <p className="movie-page__message">Не удалось загрузить фильм.</p>
+        )}
 
-              <span className="movie-page__meta-text">
-                {movie.genres?.join(", ") || "жанр неизвестен"}
-              </span>
+        {!isLoading && !hasError && movie && (
+          <>
+            <HeroMovie
+              movie={movie}
+              showRefreshButton={false}
+              showAboutButton={false}
+            />
 
-              <span className="movie-page__meta-text">
-                {formatRuntime(movie.runtime)}
-              </span>
-            </div>
+            <section className="movie-about" id="about-movie">
+              <h2 className="movie-about__title">О фильме</h2>
 
-            <h1 className="movie-page__title">{movie.title}</h1>
+              <div className="movie-about__list">
+                {movie.language && (
+                  <div className="movie-about__row">
+                    <span className="movie-about__label">Язык оригинала</span>
+                    <span className="movie-about__dots" />
+                    <span className="movie-about__value">{movie.language}</span>
+                  </div>
+                )}
 
-            <p className="movie-page__description">{description}</p>
+                {movie.budget && (
+                  <div className="movie-about__row">
+                    <span className="movie-about__label">Бюджет</span>
+                    <span className="movie-about__dots" />
+                    <span className="movie-about__value">{movie.budget}</span>
+                  </div>
+                )}
 
-            <div className="movie-page__actions">
-              <button className="movie-page__button movie-page__button--primary" type="button">
-                Трейлер
-              </button>
+                {movie.revenue && (
+                  <div className="movie-about__row">
+                    <span className="movie-about__label">Выручка</span>
+                    <span className="movie-about__dots" />
+                    <span className="movie-about__value">{movie.revenue}</span>
+                  </div>
+                )}
 
-              <button className="movie-page__icon-button" type="button" aria-label="Добавить в избранное">
-                <img src={heartIcon} alt="" />
-              </button>
-            </div>
-          </div>
+                {movie.director && (
+                  <div className="movie-about__row">
+                    <span className="movie-about__label">Режиссёр</span>
+                    <span className="movie-about__dots" />
+                    <span className="movie-about__value">{movie.director}</span>
+                  </div>
+                )}
 
-          <div className="movie-page__poster">
-            {imageUrl ? <img src={imageUrl} alt={movie.title} /> : null}
-          </div>
-        </div>
-
-        <div className="movie-page__details">
-          <h2 className="movie-page__subtitle">О фильме</h2>
-
-          <div className="movie-page__rows">
-            <div className="movie-page__row">
-              <span className="movie-page__label">Язык оригинала</span>
-              <span className="movie-page__value">{movie.language ?? "—"}</span>
-            </div>
-
-            <div className="movie-page__row">
-              <span className="movie-page__label">Бюджет</span>
-              <span className="movie-page__value">{formatMoney(movie.budget)}</span>
-            </div>
-
-            <div className="movie-page__row">
-              <span className="movie-page__label">Выручка</span>
-              <span className="movie-page__value">{formatMoney(movie.revenue)}</span>
-            </div>
-
-            <div className="movie-page__row">
-              <span className="movie-page__label">Режиссёр</span>
-              <span className="movie-page__value">{movie.director ?? "—"}</span>
-            </div>
-
-            <div className="movie-page__row">
-              <span className="movie-page__label">Актёры</span>
-              <span className="movie-page__value">
-                {movie.actors?.length ? movie.actors.join(", ") : "—"}
-              </span>
-            </div>
-          </div>
-        </div>
+                {movie.actors && movie.actors.length > 0 && (
+                  <div className="movie-about__row movie-about__row--top">
+                    <span className="movie-about__label">Актёры</span>
+                    <span className="movie-about__dots" />
+                    <span className="movie-about__value">
+                      {movie.actors.join(", ")}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </section>
+          </>
+        )}
       </section>
     </MainLayout>
   );

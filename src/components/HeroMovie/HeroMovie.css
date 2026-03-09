@@ -1,0 +1,57 @@
+.hero {
+  margin-top: 40px;
+}
+
+.hero__content {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero__info {
+  max-width: 520px;
+}
+
+.hero__rating {
+  display: inline-block;
+  background: #4caf50;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.hero__title {
+  font-size: 40px;
+  margin: 16px 0;
+}
+
+.hero__description {
+  color: rgba(255,255,255,0.7);
+}
+
+.hero__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.hero__button {
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+}
+
+.hero__button--primary {
+  background: #5c6cff;
+  color: white;
+}
+
+.hero__button--secondary {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.hero__poster img {
+  width: 320px;
+  border-radius: 12px;
+}

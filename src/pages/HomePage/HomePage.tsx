@@ -1,9 +1,12 @@
 import { MainLayout } from "../../layouts/MainLayout";
+import { HeroMovie } from "../../components/HeroMovie/HeroMovie";
 
 export const HomePage = () => {
   return (
     <MainLayout>
-      <div>Home Page</div>
+
+      <HeroMovie />
+
     </MainLayout>
   );
 };

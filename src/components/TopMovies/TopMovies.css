@@ -1,0 +1,45 @@
+.top-movies {
+  margin-top: 64px;
+}
+
+.top-movies__title {
+  margin: 0 0 28px;
+  color: #ffffff;
+  font-size: 40px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.top-movies__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 224px);
+  gap: 40px 24px;
+}
+
+@media (max-width: 1280px) {
+  .top-movies__grid {
+    grid-template-columns: repeat(4, 224px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .top-movies__grid {
+    grid-template-columns: repeat(3, 224px);
+  }
+}
+
+@media (max-width: 768px) {
+  .top-movies {
+    margin-top: 48px;
+  }
+
+  .top-movies__title {
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+
+  .top-movies__grid {
+    grid-template-columns: repeat(2, 160px);
+    gap: 24px 16px;
+  }
+}

@@ -1,60 +1,64 @@
 .hero-movie {
-  padding-top: 32px;
+  padding-top: 52px;
 }
 
 .hero-movie__content {
   display: grid;
-  grid-template-columns: minmax(420px, 1fr) 520px;
-  align-items: center;
-  gap: 32px;
-  min-height: 420px;
+  grid-template-columns: minmax(0, 1fr) 680px;
+  align-items: start;
+  gap: 40px;
+  min-height: 520px;
 }
 
 .hero-movie__info {
-  max-width: 560px;
+  max-width: 600px;
+  padding-top: 78px;
 }
 
 .hero-movie__meta {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
 }
 
 .hero-movie__rating {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 52px;
-  height: 30px;
+  min-width: 72px;
+  height: 32px;
   padding: 0 12px;
   border-radius: 16px;
   background: #308e21;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 18px;
+  line-height: 1;
   font-weight: 700;
 }
 
 .hero-movie__meta-text {
   color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
+  font-size: 24px;
+  line-height: 1;
   font-weight: 400;
 }
 
 .hero-movie__title {
-  margin: 0 0 16px;
+  max-width: 580px;
+  margin: 0 0 24px;
   color: #ffffff;
-  font-size: 48px;
-  line-height: 1.08;
+  font-size: 64px;
+  line-height: 1.02;
   font-weight: 700;
 }
 
 .hero-movie__description {
-  max-width: 470px;
-  margin: 0 0 32px;
+  max-width: 560px;
+  margin: 0 0 60px;
   color: rgba(255, 255, 255, 0.7);
-  font-size: 20px;
-  line-height: 1.6;
+  font-size: 32px;
+  line-height: 1.28;
 }
 
 .hero-movie__actions {
@@ -95,11 +99,13 @@
 }
 
 .hero-movie__button--primary {
+  min-width: 155px;
   background: #67a5eb;
   color: #ffffff;
 }
 
 .hero-movie__button--secondary {
+  min-width: 170px;
   background: rgba(57, 59, 72, 0.75);
   color: #ffffff;
 }
@@ -133,11 +139,11 @@
 
 .hero-movie__poster {
   width: 100%;
-  max-width: 520px;
+  max-width: 680px;
   justify-self: end;
   overflow: hidden;
-  border-radius: 18px;
-  aspect-ratio: 16 / 10.5;
+  border-radius: 16px;
+  aspect-ratio: 680 / 552;
   background: rgba(255, 255, 255, 0.08);
 }
 
@@ -147,10 +153,37 @@
   object-fit: cover;
 }
 
+@media (max-width: 1280px) {
+  .hero-movie__content {
+    grid-template-columns: minmax(0, 1fr) 560px;
+  }
+
+  .hero-movie__info {
+    padding-top: 36px;
+  }
+
+  .hero-movie__title {
+    font-size: 52px;
+  }
+
+  .hero-movie__description {
+    font-size: 24px;
+  }
+
+  .hero-movie__meta-text {
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 1100px) {
   .hero-movie__content {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+
+  .hero-movie__info {
+    max-width: 100%;
+    padding-top: 0;
   }
 
   .hero-movie__poster {
@@ -161,13 +194,13 @@
 
 @media (max-width: 768px) {
   .hero-movie {
-    padding-top: 20px;
+    padding-top: 24px;
   }
 
   .hero-movie__meta {
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   .hero-movie__meta-text {
@@ -175,15 +208,15 @@
   }
 
   .hero-movie__rating {
-    min-width: 44px;
+    min-width: 56px;
     height: 26px;
     font-size: 14px;
   }
 
   .hero-movie__title {
     font-size: 32px;
-    line-height: 1.12;
-    margin-bottom: 12px;
+    line-height: 1.08;
+    margin-bottom: 16px;
   }
 
   .hero-movie__description {
@@ -197,15 +230,14 @@
   }
 
   .hero-movie__button {
-  height: 48px;
-  padding: 0 18px;
-  font-size: 16px;
-  line-height: 1;
-}
+    height: 48px;
+    padding: 0 18px;
+    font-size: 16px;
+    line-height: 1;
+  }
 
   .hero-movie__icon-button {
     width: 48px;
     height: 48px;
   }
-
 }

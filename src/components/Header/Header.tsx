@@ -31,8 +31,9 @@ export const Header = () => {
         </nav>
 
         <div className="header__actions">
-          <button className="header__search" type="button">
-            Поиск
+          <button className="header__search" type="button" aria-label="Поиск">
+            <span className="header__search-icon">⌕</span>
+            <span className="header__search-text">Поиск</span>
           </button>
 
           <button className="header__login" type="button">

@@ -1,6 +1,7 @@
 export type Movie = {
   id: number;
   title: string;
+  originalTitle?: string;
   description?: string;
   plot?: string;
   posterUrl?: string;

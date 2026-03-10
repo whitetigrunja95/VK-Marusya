@@ -3,6 +3,7 @@ import heartIcon from "../../assets/icons/heart.svg";
 import refreshIcon from "../../assets/icons/refresh.svg";
 import { getRandomMovie } from "../../api/moviesApi";
 import type { Movie } from "../../types/movie";
+import { TrailerModal } from "../TrailerModal/TrailerModal";
 import "./HeroMovie.css";
 
 type HeroMovieProps = {
@@ -52,6 +53,7 @@ export const HeroMovie = ({
   const [isLoading, setIsLoading] = useState(!movieFromProps);
   const [hasError, setHasError] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   const isExternalMovie = Boolean(movieFromProps);
 
@@ -170,86 +172,95 @@ export const HeroMovie = ({
   }
 
   const rating = movie.tmdbRating ?? movie.imdbRating ?? movie.rating;
-  const description = movie.plot ?? movie.description ?? "Описание пока недоступно";
+  const description =
+    movie.plot ?? movie.description ?? "Описание пока недоступно";
   const imageUrl = movie.backdropUrl ?? movie.posterUrl ?? "";
 
   return (
-    <section className="hero-movie">
-      <div className="hero-movie__content">
-        <div className="hero-movie__info">
-          <div className="hero-movie__meta">
-            <span className="hero-movie__rating">
-              ★ {typeof rating === "number" ? rating.toFixed(1) : "—"}
-            </span>
+    <>
+      <section className="hero-movie">
+        <div className="hero-movie__content">
+          <div className="hero-movie__info">
+            <div className="hero-movie__meta">
+              <span className="hero-movie__rating">
+                ★ {typeof rating === "number" ? rating.toFixed(1) : "—"}
+              </span>
 
-            <span className="hero-movie__meta-text">
-              {movie.releaseYear ?? "—"}
-            </span>
+              <span className="hero-movie__meta-text">
+                {movie.releaseYear ?? "—"}
+              </span>
 
-            <span className="hero-movie__meta-text">
-              {movie.genres?.[0] ?? "Жанр неизвестен"}
-            </span>
+              <span className="hero-movie__meta-text">
+                {movie.genres?.[0] ?? "Жанр неизвестен"}
+              </span>
 
-            <span className="hero-movie__meta-text">
-              {formatRuntime(movie.runtime)}
-            </span>
-          </div>
+              <span className="hero-movie__meta-text">
+                {formatRuntime(movie.runtime)}
+              </span>
+            </div>
 
-          <h1 className="hero-movie__title">{movie.title}</h1>
+            <h1 className="hero-movie__title">{movie.title}</h1>
 
-          <p className="hero-movie__description">{description}</p>
+            <p className="hero-movie__description">{description}</p>
 
-          <div className="hero-movie__actions">
-            {movie.trailerUrl && (
-              <a
-                className="hero-movie__button hero-movie__button--primary hero-movie__link-button"
-                href={movie.trailerUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Трейлер
-              </a>
-            )}
+            <div className="hero-movie__actions">
+              {movie.trailerUrl && (
+                <button
+                  className="hero-movie__button hero-movie__button--primary"
+                  type="button"
+                  onClick={() => setIsTrailerOpen(true)}
+                >
+                  Трейлер
+                </button>
+              )}
 
-            {showAboutButton && (
-              <a
-                className="hero-movie__button hero-movie__button--secondary hero-movie__link-button"
-                href="#about-movie"
-              >
-                О фильме
-              </a>
-            )}
+              {showAboutButton && (
+                <a
+                  className="hero-movie__button hero-movie__button--secondary hero-movie__link-button"
+                  href="#about-movie"
+                >
+                  О фильме
+                </a>
+              )}
 
-            <button
-              className={`hero-movie__icon-button ${
-                isFavorite ? "hero-movie__icon-button--active" : ""
-              }`}
-              type="button"
-              aria-label={
-                isFavorite ? "Удалить из избранного" : "Добавить в избранное"
-              }
-              onClick={handleToggleFavorite}
-            >
-              <img src={heartIcon} alt="" />
-            </button>
-
-            {showRefreshButton && !isExternalMovie && (
               <button
-                className="hero-movie__icon-button"
+                className={`hero-movie__icon-button ${
+                  isFavorite ? "hero-movie__icon-button--active" : ""
+                }`}
                 type="button"
-                aria-label="Показать другой фильм"
-                onClick={loadRandomMovie}
+                aria-label={
+                  isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+                }
+                onClick={handleToggleFavorite}
               >
-                <img src={refreshIcon} alt="" />
+                <img src={heartIcon} alt="" />
               </button>
-            )}
+
+              {showRefreshButton && !isExternalMovie && (
+                <button
+                  className="hero-movie__icon-button"
+                  type="button"
+                  aria-label="Показать другой фильм"
+                  onClick={loadRandomMovie}
+                >
+                  <img src={refreshIcon} alt="" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="hero-movie__poster">
+            {imageUrl ? <img src={imageUrl} alt={movie.title} /> : null}
           </div>
         </div>
+      </section>
 
-        <div className="hero-movie__poster">
-          {imageUrl ? <img src={imageUrl} alt={movie.title} /> : null}
-        </div>
-      </div>
-    </section>
+      <TrailerModal
+        isOpen={isTrailerOpen}
+        trailerUrl={movie.trailerUrl}
+        title={movie.title}
+        onClose={() => setIsTrailerOpen(false)}
+      />
+    </>
   );
 };

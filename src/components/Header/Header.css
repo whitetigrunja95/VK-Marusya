@@ -19,23 +19,6 @@
   flex-shrink: 0;
 }
 
-.header__logo-dot {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 30% 30%, #72dbff 0%, #72dbff 18%, transparent 19%),
-    linear-gradient(180deg, #8b6cff 0%, #2f80ed 100%);
-  box-shadow: 0 0 18px rgba(102, 126, 234, 0.55);
-}
-
-.header__logo-text {
-  color: #ffffff;
-  font-size: 32px;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0;
-}
 
 .header__nav {
   display: flex;

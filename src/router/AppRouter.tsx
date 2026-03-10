@@ -1,9 +1,9 @@
-import { Routes, Route } from "react-router-dom"
-import { HomePage } from "../pages/HomePage/HomePage"
-import { GenresPage } from "../pages/GenresPage/GenresPage"
-import { GenreMoviesPage } from "../pages/GenreMoviesPage/GenreMoviesPage"
-import { MoviePage } from "../pages/MoviePage/MoviePage"
-import { AccountPage } from "../pages/AccountPage/AccountPage"
+import { Navigate, Route, Routes } from "react-router-dom";
+import { HomePage } from "../pages/HomePage/HomePage";
+import { GenresPage } from "../pages/GenresPage/GenresPage";
+import { GenreMoviesPage } from "../pages/GenreMoviesPage/GenreMoviesPage";
+import { MoviePage } from "../pages/MoviePage/MoviePage";
+import { AccountPage } from "../pages/AccountPage/AccountPage";
 
 export const AppRouter = () => {
   return (
@@ -13,6 +13,7 @@ export const AppRouter = () => {
       <Route path="/genres/:genre" element={<GenreMoviesPage />} />
       <Route path="/movie/:id" element={<MoviePage />} />
       <Route path="/account" element={<AccountPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  )
-}
+  );
+};

@@ -9,6 +9,17 @@ import "./GenreMoviesPage.css";
 
 const MOVIES_PER_PAGE = 10;
 
+const genreApiMap: Record<string, string> = {
+  drama: "drama",
+  comedy: "comedy",
+  detective: "crime",
+  family: "family",
+  history: "history",
+  thriller: "thriller",
+  fantasy: "fantasy",
+  adventure: "adventure",
+};
+
 export const GenreMoviesPage = () => {
   const { genre } = useParams<{ genre: string }>();
 
@@ -29,7 +40,9 @@ export const GenreMoviesPage = () => {
         setHasError(false);
         setIsLoading(true);
 
-        const moviesFromApi = await getMoviesByGenre(genre);
+        const apiGenre = genreApiMap[genre] ?? genre;
+        const moviesFromApi = await getMoviesByGenre(apiGenre);
+
         setMovies(moviesFromApi);
         setVisibleCount(MOVIES_PER_PAGE);
       } catch (error) {
@@ -54,7 +67,11 @@ export const GenreMoviesPage = () => {
     <MainLayout>
       <section className="genre-movies-page">
         <div className="genre-movies-page__header">
-          <Link className="genre-movies-page__back" to="/genres" aria-label="Назад к жанрам">
+          <Link
+            className="genre-movies-page__back"
+            to="/genres"
+            aria-label="Назад к жанрам"
+          >
             ←
           </Link>
 

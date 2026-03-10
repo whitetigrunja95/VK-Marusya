@@ -111,7 +111,9 @@ export const Header = () => {
               </button>
             ) : (
               <div className="header__user">
-                <span className="header__user-name">{currentUser.firstName}</span>
+                <Link className="header__user-name" to="/account">
+                  {currentUser.firstName}
+                </Link>
 
                 <button
                   className="header__logout"

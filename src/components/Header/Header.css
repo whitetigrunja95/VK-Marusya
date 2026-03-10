@@ -167,4 +167,10 @@
   .header__logo-text {
     font-size: 20px;
   }
+
+  .header__logo-image {
+  height: 32px;
+  width: auto;
+  display: block;
+}
 }

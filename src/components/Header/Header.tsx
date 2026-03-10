@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import logo from "../../assets/icons/logo.svg";
 import "./Header.css";
 
 export const Header = () => {
@@ -6,8 +7,7 @@ export const Header = () => {
     <header className="header">
       <div className="header__container">
         <Link className="header__logo" to="/">
-          <span className="header__logo-dot" />
-          <span className="header__logo-text">маруся</span>
+          <img className="header__logo-image" src={logo} alt="Маруся" />
         </Link>
 
         <nav className="header__nav">

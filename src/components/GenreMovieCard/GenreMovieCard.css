@@ -7,7 +7,8 @@
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.genre-movie-card:hover {
+.genre-movie-card:hover,
+.genre-movie-card:focus-visible {
   transform: translateY(-4px);
   opacity: 0.95;
 }
@@ -17,6 +18,12 @@
   width: 100%;
   aspect-ratio: 224 / 336;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.genre-movie-card:hover .genre-movie-card__image,
+.genre-movie-card:focus-visible .genre-movie-card__image {
+  transform: scale(1.05);
 }
 
 .genre-movie-card__placeholder {

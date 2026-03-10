@@ -1,11 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/icons/logo.svg";
 import { AuthModal } from "../AuthModal/AuthModal";
 import "./Header.css";
 
+const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
+
+type CurrentUser = {
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+
 export const Header = () => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+
+  useEffect(() => {
+    const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+
+    if (!rawCurrentUser) {
+      return;
+    }
+
+    try {
+      const parsedUser = JSON.parse(rawCurrentUser) as CurrentUser;
+      setCurrentUser(parsedUser);
+    } catch (error) {
+      console.error(
+        "Не удалось прочитать текущего пользователя из localStorage:",
+        error
+      );
+    }
+  }, []);
+
+  const handleLoginSuccess = (userName: string) => {
+    const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+
+    if (!rawCurrentUser) {
+      setCurrentUser({
+        email: "",
+        firstName: userName,
+        lastName: "",
+      });
+      return;
+    }
+
+    try {
+      const parsedUser = JSON.parse(rawCurrentUser) as CurrentUser;
+      setCurrentUser(parsedUser);
+    } catch (error) {
+      console.error(
+        "Не удалось обновить текущего пользователя после входа:",
+        error
+      );
+      setCurrentUser({
+        email: "",
+        firstName: userName,
+        lastName: "",
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
+    setCurrentUser(null);
+  };
 
   return (
     <>
@@ -41,13 +101,27 @@ export const Header = () => {
               <span className="header__search-text">Поиск</span>
             </button>
 
-            <button
-              className="header__login"
-              type="button"
-              onClick={() => setIsAuthModalOpen(true)}
-            >
-              Войти
-            </button>
+            {!currentUser ? (
+              <button
+                className="header__login"
+                type="button"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                Войти
+              </button>
+            ) : (
+              <div className="header__user">
+                <span className="header__user-name">{currentUser.firstName}</span>
+
+                <button
+                  className="header__logout"
+                  type="button"
+                  onClick={handleLogout}
+                >
+                  Выйти
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -55,6 +129,7 @@ export const Header = () => {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </>
   );

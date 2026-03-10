@@ -120,6 +120,11 @@
   .header__search-icon {
     font-size: 18px;
   }
+
+  .header__user-name,
+.header__logout {
+  font-size: 18px;
+}
 }
 
 @media (max-width: 768px) {
@@ -156,4 +161,51 @@
   width: auto;
   display: block;
 }
+
+.header__user {
+  gap: 10px;
+}
+
+.header__user-name,
+.header__logout {
+  font-size: 16px;
+}
+}
+
+.header__logo {
+  text-decoration: none;
+}
+
+.header__link {
+  text-decoration: none;
+}
+
+.header__logo-image {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
+.header__login,
+.header__logout {
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header__user-name {
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 600;
 }

@@ -8,6 +8,7 @@ import "./AuthModal.css";
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: (userName: string) => void;
 };
 
 type AuthView = "login" | "register" | "success";
@@ -15,6 +16,7 @@ type AuthView = "login" | "register" | "success";
 type LoginErrors = {
   email?: boolean;
   password?: boolean;
+  credentials?: boolean;
 };
 
 type RegisterErrors = {
@@ -23,9 +25,43 @@ type RegisterErrors = {
   lastName?: boolean;
   password?: boolean;
   confirmPassword?: boolean;
+  emailExists?: boolean;
 };
 
-export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
+type StoredUser = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+};
+
+const USERS_STORAGE_KEY = "marusya_users";
+const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
+
+const getStoredUsers = (): StoredUser[] => {
+  const rawUsers = localStorage.getItem(USERS_STORAGE_KEY);
+
+  if (!rawUsers) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(rawUsers) as StoredUser[];
+  } catch (error) {
+    console.error("Не удалось прочитать пользователей из localStorage:", error);
+    return [];
+  }
+};
+
+const saveStoredUsers = (users: StoredUser[]) => {
+  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+};
+
+export const AuthModal = ({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+}: AuthModalProps) => {
   const [view, setView] = useState<AuthView>("login");
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -73,12 +109,33 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       errors.password = true;
     }
 
-    setLoginErrors(errors);
-
     if (Object.keys(errors).length > 0) {
+      setLoginErrors(errors);
       return;
     }
 
+    const users = getStoredUsers();
+
+    const foundUser = users.find(
+      (user) =>
+        user.email === loginEmail.trim() && user.password === loginPassword
+    );
+
+    if (!foundUser) {
+      setLoginErrors({ credentials: true });
+      return;
+    }
+
+    localStorage.setItem(
+      CURRENT_USER_STORAGE_KEY,
+      JSON.stringify({
+        email: foundUser.email,
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+      })
+    );
+
+    onLoginSuccess(foundUser.firstName);
     onClose();
   };
 
@@ -116,12 +173,31 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       errors.confirmPassword = true;
     }
 
+    const users = getStoredUsers();
+
+    const isEmailExists = users.some(
+      (user) => user.email === registerEmail.trim()
+    );
+
+    if (registerEmail.trim() && isEmailExists) {
+      errors.email = true;
+      errors.emailExists = true;
+    }
+
     setRegisterErrors(errors);
 
     if (Object.keys(errors).length > 0) {
       return;
     }
 
+    const newUser: StoredUser = {
+      email: registerEmail.trim(),
+      firstName: registerFirstName.trim(),
+      lastName: registerLastName.trim(),
+      password: registerPassword,
+    };
+
+    saveStoredUsers([...users, newUser]);
     setView("success");
   };
 
@@ -157,7 +233,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="email"
                   placeholder="Электронная почта"
                   value={loginEmail}
-                  onChange={(event) => setLoginEmail(event.target.value)}
+                  onChange={(event) => {
+                    setLoginEmail(event.target.value);
+                    setLoginErrors({});
+                  }}
                 />
               </div>
 
@@ -174,10 +253,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="password"
                   placeholder="Пароль"
                   value={loginPassword}
-                  onChange={(event) => setLoginPassword(event.target.value)}
+                  onChange={(event) => {
+                    setLoginPassword(event.target.value);
+                    setLoginErrors({});
+                  }}
                 />
               </div>
             </div>
+
+            {loginErrors.credentials && (
+              <p className="auth-modal__error-message">
+                Неверная почта или пароль
+              </p>
+            )}
 
             <button className="auth-modal__submit" type="submit">
               Войти
@@ -186,7 +274,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             <button
               className="auth-modal__switch"
               type="button"
-              onClick={() => setView("register")}
+              onClick={() => {
+                setLoginErrors({});
+                setView("register");
+              }}
             >
               Регистрация
             </button>
@@ -211,7 +302,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="email"
                   placeholder="Электронная почта"
                   value={registerEmail}
-                  onChange={(event) => setRegisterEmail(event.target.value)}
+                  onChange={(event) => {
+                    setRegisterEmail(event.target.value);
+                    setRegisterErrors({});
+                  }}
                 />
               </div>
 
@@ -228,7 +322,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="text"
                   placeholder="Имя"
                   value={registerFirstName}
-                  onChange={(event) => setRegisterFirstName(event.target.value)}
+                  onChange={(event) => {
+                    setRegisterFirstName(event.target.value);
+                    setRegisterErrors({});
+                  }}
                 />
               </div>
 
@@ -245,7 +342,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="text"
                   placeholder="Фамилия"
                   value={registerLastName}
-                  onChange={(event) => setRegisterLastName(event.target.value)}
+                  onChange={(event) => {
+                    setRegisterLastName(event.target.value);
+                    setRegisterErrors({});
+                  }}
                 />
               </div>
 
@@ -262,7 +362,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="password"
                   placeholder="Пароль"
                   value={registerPassword}
-                  onChange={(event) => setRegisterPassword(event.target.value)}
+                  onChange={(event) => {
+                    setRegisterPassword(event.target.value);
+                    setRegisterErrors({});
+                  }}
                 />
               </div>
 
@@ -283,12 +386,19 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="password"
                   placeholder="Подтвердите пароль"
                   value={registerConfirmPassword}
-                  onChange={(event) =>
-                    setRegisterConfirmPassword(event.target.value)
-                  }
+                  onChange={(event) => {
+                    setRegisterConfirmPassword(event.target.value);
+                    setRegisterErrors({});
+                  }}
                 />
               </div>
             </div>
+
+            {registerErrors.emailExists && (
+              <p className="auth-modal__error-message">
+                Пользователь с такой почтой уже существует
+              </p>
+            )}
 
             <button className="auth-modal__submit" type="submit">
               Создать аккаунт
@@ -297,7 +407,10 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             <button
               className="auth-modal__switch"
               type="button"
-              onClick={() => setView("login")}
+              onClick={() => {
+                setRegisterErrors({});
+                setView("login");
+              }}
             >
               У меня есть пароль
             </button>

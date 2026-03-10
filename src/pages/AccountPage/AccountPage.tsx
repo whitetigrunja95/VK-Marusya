@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import mailIcon from "../../assets/icons/mail.svg";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
@@ -16,39 +16,65 @@ type CurrentUser = {
 const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
 const FAVORITES_STORAGE_KEY = "marusya_favorites";
 
+const getStoredCurrentUser = (): CurrentUser | null => {
+  const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+
+  if (!rawCurrentUser) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawCurrentUser) as CurrentUser;
+  } catch (error) {
+    console.error(
+      "Не удалось прочитать текущего пользователя из localStorage:",
+      error
+    );
+    return null;
+  }
+};
+
+const getStoredFavorites = (): Movie[] => {
+  const rawFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+
+  if (!rawFavorites) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(rawFavorites) as Movie[];
+  } catch (error) {
+    console.error(
+      "Не удалось прочитать избранные фильмы из localStorage:",
+      error
+    );
+    return [];
+  }
+};
+
 export const AccountPage = () => {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<AccountTab>("favorites");
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [favorites, setFavorites] = useState<Movie[]>([]);
 
   useEffect(() => {
-    const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+    setCurrentUser(getStoredCurrentUser());
+    setFavorites(getStoredFavorites());
+  }, []);
 
-    if (rawCurrentUser) {
-      try {
-        const parsedUser = JSON.parse(rawCurrentUser) as CurrentUser;
-        setCurrentUser(parsedUser);
-      } catch (error) {
-        console.error(
-          "Не удалось прочитать текущего пользователя из localStorage:",
-          error
-        );
-      }
-    }
+  useEffect(() => {
+    const handleStorageUpdate = () => {
+      setCurrentUser(getStoredCurrentUser());
+      setFavorites(getStoredFavorites());
+    };
 
-    const rawFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    window.addEventListener("storage", handleStorageUpdate);
 
-    if (rawFavorites) {
-      try {
-        const parsedFavorites = JSON.parse(rawFavorites) as Movie[];
-        setFavorites(parsedFavorites);
-      } catch (error) {
-        console.error(
-          "Не удалось прочитать избранные фильмы из localStorage:",
-          error
-        );
-      }
-    }
+    return () => {
+      window.removeEventListener("storage", handleStorageUpdate);
+    };
   }, []);
 
   const initials = useMemo(() => {
@@ -69,13 +95,14 @@ export const AccountPage = () => {
 
   const handleRemoveFavorite = (movieId: number | string) => {
     const updatedFavorites = favorites.filter((movie) => movie.id !== movieId);
+
     setFavorites(updatedFavorites);
     localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
   };
 
   const handleLogout = () => {
     localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (

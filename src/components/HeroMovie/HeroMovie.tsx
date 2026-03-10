@@ -11,6 +11,8 @@ type HeroMovieProps = {
   showAboutButton?: boolean;
 };
 
+const FAVORITES_STORAGE_KEY = "marusya_favorites";
+
 const formatRuntime = (minutes?: number) => {
   if (!minutes) {
     return "—";
@@ -26,6 +28,21 @@ const formatRuntime = (minutes?: number) => {
   return `${hours} ч ${remainingMinutes} мин`;
 };
 
+const getStoredFavorites = (): Movie[] => {
+  const rawFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
+
+  if (!rawFavorites) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(rawFavorites) as Movie[];
+  } catch (error) {
+    console.error("Не удалось прочитать избранные фильмы:", error);
+    return [];
+  }
+};
+
 export const HeroMovie = ({
   movie: movieFromProps,
   showRefreshButton = true,
@@ -34,6 +51,7 @@ export const HeroMovie = ({
   const [randomMovie, setRandomMovie] = useState<Movie | null>(null);
   const [isLoading, setIsLoading] = useState(!movieFromProps);
   const [hasError, setHasError] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const isExternalMovie = Boolean(movieFromProps);
 
@@ -69,6 +87,49 @@ export const HeroMovie = ({
 
     void loadRandomMovie();
   }, [movieFromProps]);
+
+  useEffect(() => {
+    if (!movie) {
+      setIsFavorite(false);
+      return;
+    }
+
+    const favorites = getStoredFavorites();
+    const isMovieInFavorites = favorites.some(
+      (favoriteMovie) => favoriteMovie.id === movie.id
+    );
+
+    setIsFavorite(isMovieInFavorites);
+  }, [movie]);
+
+  const handleToggleFavorite = () => {
+    if (!movie) {
+      return;
+    }
+
+    const favorites = getStoredFavorites();
+    const isMovieInFavorites = favorites.some(
+      (favoriteMovie) => favoriteMovie.id === movie.id
+    );
+
+    if (isMovieInFavorites) {
+      const updatedFavorites = favorites.filter(
+        (favoriteMovie) => favoriteMovie.id !== movie.id
+      );
+
+      localStorage.setItem(
+        FAVORITES_STORAGE_KEY,
+        JSON.stringify(updatedFavorites)
+      );
+      setIsFavorite(false);
+      return;
+    }
+
+    const updatedFavorites = [...favorites, movie];
+
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
+    setIsFavorite(true);
+  };
 
   if (isLoading) {
     return (
@@ -160,9 +221,14 @@ export const HeroMovie = ({
             )}
 
             <button
-              className="hero-movie__icon-button"
+              className={`hero-movie__icon-button ${
+                isFavorite ? "hero-movie__icon-button--active" : ""
+              }`}
               type="button"
-              aria-label="Добавить в избранное"
+              aria-label={
+                isFavorite ? "Удалить из избранного" : "Добавить в избранное"
+              }
+              onClick={handleToggleFavorite}
             >
               <img src={heartIcon} alt="" />
             </button>

@@ -123,13 +123,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 50%;
-  background: rgba(57, 59, 72, 0.75);
+  border-radius: 40%;
   transition:
     transform 0.2s ease,
     opacity 0.2s ease,
     background-color 0.2s ease;
+  background: var(--background-secondary, #393B3C);
+  border: 1px solid var(--content-placeholder, #00000066)
+
+}
+
+.hero-movie__icon-button--active {
+  color: #B4A9FF;
 }
 
 .hero-movie__icon-button img {
@@ -240,4 +245,9 @@
     width: 48px;
     height: 48px;
   }
+
 }
+
+
+
+

@@ -25,3 +25,8 @@ export const getMoviesByGenre = async (genre: string): Promise<Movie[]> => {
   const response = await apiClient.get(`/movie?genre=${genre}`);
   return response.data;
 };
+
+export const searchMovies = async (title: string): Promise<Movie[]> => {
+  const response = await apiClient.get(`/movie?title=${encodeURIComponent(title)}`);
+  return response.data;
+};

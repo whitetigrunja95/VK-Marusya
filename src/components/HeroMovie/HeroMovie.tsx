@@ -155,7 +155,7 @@ export const HeroMovie = ({
             </p>
 
             {!isExternalMovie && (
-              <div className="hero-movie__actions">
+              <div className={`hero-movie__actions ${!showAboutButton && !showRefreshButton ? "hero-movie__actions--movie-page" : ""}`} >
                 <button
                   className="hero-movie__button hero-movie__button--primary"
                   type="button"
@@ -203,7 +203,12 @@ export const HeroMovie = ({
 
             <p className="hero-movie__description">{description}</p>
 
-            <div className="hero-movie__actions">
+            <div
+              className={`hero-movie__actions${!showAboutButton && !showRefreshButton
+                  ? " hero-movie__actions--movie-page"
+                  : ""
+                }`}
+            >
               {movie.trailerUrl && (
                 <button
                   className="hero-movie__button hero-movie__button--primary"
@@ -224,9 +229,8 @@ export const HeroMovie = ({
               )}
 
               <button
-                className={`hero-movie__icon-button ${
-                  isFavorite ? "hero-movie__icon-button--active" : ""
-                }`}
+                className={`hero-movie__icon-button ${isFavorite ? "hero-movie__icon-button--active" : ""
+                  }`}
                 type="button"
                 aria-label={
                   isFavorite ? "Удалить из избранного" : "Добавить в избранное"

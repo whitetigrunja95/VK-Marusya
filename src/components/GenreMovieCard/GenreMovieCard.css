@@ -1,16 +1,21 @@
 .genre-movie-card {
   display: block;
-  border-radius: 24px;
+  width: 100%;
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   background-color: #1f1b2e;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .genre-movie-card:hover,
 .genre-movie-card:focus-visible {
   transform: translateY(-4px);
-  opacity: 0.95;
+  opacity: 0.96;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
 }
 
 .genre-movie-card__image {
@@ -36,4 +41,17 @@
   text-align: center;
   color: #ffffff;
   background: #2a2640;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .genre-movie-card {
+    border-radius: 16px;
+  }
+
+  .genre-movie-card__image,
+  .genre-movie-card__placeholder {
+    aspect-ratio: 335 / 502;
+  }
 }

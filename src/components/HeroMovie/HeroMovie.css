@@ -20,6 +20,7 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .hero-movie__rating {
@@ -123,18 +124,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 40%;
+  border-radius: 50%;
   transition:
     transform 0.2s ease,
     opacity 0.2s ease,
     background-color 0.2s ease;
-  background: var(--background-secondary, #393B3C);
-  border: 1px solid var(--content-placeholder, #00000066)
-
+  background: #393b3c;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .hero-movie__icon-button--active {
-  color: #B4A9FF;
+  color: #b4a9ff;
 }
 
 .hero-movie__icon-button img {
@@ -158,32 +158,79 @@
   object-fit: cover;
 }
 
-@media (max-width: 1280px) {
-  .hero-movie__content {
-    grid-template-columns: minmax(0, 1fr) 560px;
-  }
-
-  .hero-movie__info {
+@media (max-width: 1199px) {
+  .hero-movie {
     padding-top: 36px;
   }
 
-  .hero-movie__title {
-    font-size: 52px;
+  .hero-movie__content {
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 28px;
+    min-height: auto;
   }
 
-  .hero-movie__description {
-    font-size: 24px;
+  .hero-movie__info {
+    max-width: 100%;
+    padding-top: 20px;
+  }
+
+  .hero-movie__meta {
+    margin-bottom: 20px;
+    gap: 12px;
   }
 
   .hero-movie__meta-text {
     font-size: 18px;
   }
+
+  .hero-movie__title {
+    max-width: 100%;
+    margin-bottom: 20px;
+    font-size: 48px;
+    line-height: 1.05;
+  }
+
+  .hero-movie__description {
+    max-width: 100%;
+    margin-bottom: 32px;
+    font-size: 22px;
+    line-height: 1.35;
+  }
+
+  .hero-movie__poster {
+    max-width: 420px;
+    aspect-ratio: 420 / 360;
+  }
+
+  .hero-movie__button {
+    height: 52px;
+    font-size: 16px;
+  }
+
+  .hero-movie__button--primary {
+    min-width: 140px;
+  }
+
+  .hero-movie__button--secondary {
+    min-width: 150px;
+  }
+
+  .hero-movie__icon-button {
+    width: 52px;
+    height: 52px;
+  }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 767px) {
+  .hero-movie {
+    padding-top: 24px;
+  }
+
   .hero-movie__content {
-    grid-template-columns: 1fr;
-    gap: 28px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 24px;
+    min-height: auto;
   }
 
   .hero-movie__info {
@@ -192,62 +239,87 @@
   }
 
   .hero-movie__poster {
-    justify-self: start;
     max-width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-movie {
-    padding-top: 24px;
+    width: 100%;
+    aspect-ratio: 335 / 234;
+    border-radius: 20px;
   }
 
   .hero-movie__meta {
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 10px 14px;
     margin-bottom: 16px;
-  }
-
-  .hero-movie__meta-text {
-    font-size: 14px;
   }
 
   .hero-movie__rating {
-    min-width: 56px;
-    height: 26px;
-    font-size: 14px;
+    min-width: 62px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .hero-movie__meta-text {
+    font-size: 16px;
+    line-height: 1.2;
   }
 
   .hero-movie__title {
-    font-size: 32px;
-    line-height: 1.08;
+    max-width: 100%;
     margin-bottom: 16px;
+    font-size: 28px;
+    line-height: 1.15;
   }
 
   .hero-movie__description {
-    margin-bottom: 24px;
+    max-width: 100%;
+    margin-bottom: 32px;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.45;
   }
 
   .hero-movie__actions {
+    display: grid;
+    grid-template-columns: 1fr 56px 56px;
     gap: 12px;
+    align-items: center;
   }
 
   .hero-movie__button {
-    height: 48px;
+    height: 56px;
     padding: 0 18px;
-    font-size: 16px;
-    line-height: 1;
+    font-size: 18px;
+  }
+
+  .hero-movie__button--primary {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-movie__button--secondary {
+    min-width: 0;
+    width: 100%;
   }
 
   .hero-movie__icon-button {
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
   }
 
+  .hero-movie__actions--movie-page {
+    display: grid;
+    grid-template-columns: 251px 68px;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .hero-movie__actions--movie-page .hero-movie__button--primary {
+    grid-column: auto;
+    width: 251px;
+    min-width: 251px;
+  }
+
+  .hero-movie__actions--movie-page .hero-movie__icon-button {
+    width: 68px;
+    height: 56px;
+    border-radius: 28px;
+  }
 }
-
-
-
-

@@ -96,6 +96,14 @@ export const AuthModal = ({
     return null;
   }
 
+  const contentClassName = `auth-modal__content ${
+    view === "success"
+      ? "auth-modal__content--success"
+      : view === "register"
+        ? "auth-modal__content--register"
+        : "auth-modal__content--login"
+  }`;
+
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -205,7 +213,7 @@ export const AuthModal = ({
     <div className="auth-modal">
       <div className="auth-modal__overlay" onClick={onClose} />
 
-      <div className="auth-modal__content" role="dialog" aria-modal="true">
+      <div className={contentClassName} role="dialog" aria-modal="true">
         <button
           className="auth-modal__close"
           type="button"

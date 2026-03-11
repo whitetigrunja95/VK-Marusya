@@ -23,6 +23,18 @@
   transform: translate(-50%, -50%);
 }
 
+.auth-modal__content--login {
+  min-height: 520px;
+}
+
+.auth-modal__content--register {
+  min-height: 760px;
+}
+
+.auth-modal__content--success {
+  min-height: 420px;
+}
+
 .auth-modal__close {
   position: absolute;
   top: 0;
@@ -108,7 +120,6 @@
   border-color: #ff7a7a;
 }
 
-/* ВАЖНО: эти стили должны быть вне media */
 .auth-modal__field--error .auth-modal__input {
   border-color: #ff7a7a;
 }
@@ -166,32 +177,97 @@
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .auth-modal__content {
-    width: calc(100% - 32px);
-    max-width: 420px;
-    padding: 44px 20px 32px;
-  }
-
-  .auth-modal__close {
-    top: -56px;
-    right: 0;
-  }
-
-  .auth-modal__logo {
-    margin-bottom: 24px;
-  }
-
-  .auth-modal__title {
-    margin-bottom: 24px;
-    font-size: 22px;
-  }
-}
-
 .auth-modal__error-message {
   margin: 12px 0 0;
   color: #ff6b6b;
   font-size: 14px;
   line-height: 1.3;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .auth-modal__content {
+    width: 335px;
+    max-width: calc(100vw - 40px);
+    padding: 64px 20px 32px;
+    border-radius: 24px;
+  }
+
+  .auth-modal__content--login {
+    min-height: 410px;
+  }
+
+  .auth-modal__content--register {
+    min-height: 670px;
+  }
+
+  .auth-modal__content--success {
+    min-height: 342px;
+  }
+
+  .auth-modal__close {
+    top: 20px;
+    right: 20px;
+    width: 24px;
+    height: 24px;
+    border-radius: 0;
+    background: transparent;
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .auth-modal__logo {
+    width: 132px;
+    margin: 0 auto 28px;
+  }
+
+  .auth-modal__title {
+    margin: 0 0 24px;
+    font-size: 24px;
+    line-height: 1.15;
+  }
+
+  .auth-modal__fields {
+    gap: 12px;
+  }
+
+  .auth-modal__input {
+    height: 56px;
+    padding: 0 16px 0 50px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  .auth-modal__submit {
+    height: 56px;
+    margin-top: 24px;
+    font-size: 18px;
+    border-radius: 28px;
+  }
+
+  .auth-modal__switch {
+    margin-top: 24px;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .auth-modal__success {
+    justify-content: flex-start;
+  }
+
+  .auth-modal__content--success .auth-modal__title {
+    margin-bottom: 24px;
+  }
+
+  .auth-modal__content--success .auth-modal__success-text {
+    max-width: 240px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .auth-modal__content--success .auth-modal__submit {
+    margin-top: 32px;
+  }
 }

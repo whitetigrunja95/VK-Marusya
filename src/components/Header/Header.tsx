@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/icons/logo.svg";
+import { MenuIcon } from "../icons/MenuIcon";
+import { SearchIcon } from "../icons/SearchIcon";
+import { AccountIcon } from "../icons/AccountIcon";
 import { searchMovies } from "../../api/moviesApi";
 import type { Movie } from "../../types/movie";
 import { AuthModal } from "../AuthModal/AuthModal";
@@ -214,7 +217,10 @@ export const Header = () => {
                             <div className="header__search-info">
                               <div className="header__search-meta">
                                 <span className="header__search-rating">
-                                  ★ {typeof rating === "number" ? rating.toFixed(1) : "—"}
+                                  ★{" "}
+                                  {typeof rating === "number"
+                                    ? rating.toFixed(1)
+                                    : "—"}
                                 </span>
 
                                 <span className="header__search-meta-text">
@@ -267,6 +273,44 @@ export const Header = () => {
                   Выйти
                 </button>
               </div>
+            )}
+          </div>
+
+          <div className="header__mobile-actions">
+            <button
+              className="header__mobile-button"
+              type="button"
+              aria-label="Открыть жанры"
+              onClick={() => navigate("/genres")}
+            >
+              <MenuIcon className="header__mobile-icon" />
+            </button>
+
+            <button
+              className="header__mobile-button"
+              type="button"
+              aria-label="Открыть поиск"
+            >
+              <SearchIcon className="header__mobile-icon" />
+            </button>
+
+            {!currentUser ? (
+              <button
+                className="header__mobile-button"
+                type="button"
+                aria-label="Войти в аккаунт"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                <AccountIcon className="header__mobile-icon" />
+              </button>
+            ) : (
+              <Link
+                className="header__mobile-button header__mobile-button--link"
+                to="/account"
+                aria-label="Открыть профиль"
+              >
+                <AccountIcon className="header__mobile-icon" />
+              </Link>
             )}
           </div>
         </div>

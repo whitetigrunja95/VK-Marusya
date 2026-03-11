@@ -62,20 +62,42 @@
     padding: 24px 0 48px;
   }
 
+  .movie-page__message {
+    font-size: 16px;
+  }
+
   .movie-about {
-    margin-top: 40px;
+    margin-top: 48px;
+    max-width: 100%;
   }
 
   .movie-about__title {
-    margin-bottom: 24px;
-    font-size: 28px;
+    margin: 0 0 32px;
+    font-size: 40px;
+    line-height: 1.08;
+  }
+
+  .movie-about__list {
+    gap: 20px;
   }
 
   .movie-about__row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
     font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .movie-about__row--top {
+    align-items: flex-start;
+  }
+
+  .movie-about__label {
+    min-width: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 18px;
+    line-height: 1.2;
   }
 
   .movie-about__dots {
@@ -84,6 +106,8 @@
 
   .movie-about__value {
     width: auto;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1.3;
   }
-
 }

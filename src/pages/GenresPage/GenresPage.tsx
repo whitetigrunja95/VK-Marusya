@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { getGenres } from "../../api/moviesApi";
 import { GenreCard } from "../../components/GenreCard/GenreCard";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Genre } from "../../types/genre";
-import { genreImages, getGenreTitle } from "../../utils/genreData";
+import {
+  genreImages,
+  getGenreTitle,
+  type GenreSlug,
+} from "../../utils/genreData";
 import "./GenresPage.css";
 
 export const GenresPage = () => {
@@ -12,40 +15,34 @@ export const GenresPage = () => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    const loadGenres = async () => {
-      try {
-        setHasError(false);
-        setIsLoading(true);
+    try {
+      setHasError(false);
+      setIsLoading(true);
 
-        await getGenres();
+      const orderedGenres: GenreSlug[] = [
+        "drama",
+        "comedy",
+        "detective",
+        "family",
+        "history",
+        "thriller",
+        "fantasy",
+        "adventure",
+      ];
 
-        const orderedGenres = [
-          "drama",
-          "comedy",
-          "detective",
-          "family",
-          "history",
-          "thriller",
-          "fantasy",
-          "adventure",
-        ];
+      const preparedGenres = orderedGenres.map((genre) => ({
+        slug: genre,
+        title: getGenreTitle(genre),
+        image: genreImages[genre],
+      }));
 
-        const preparedGenres = orderedGenres.map((genre) => ({
-          slug: genre,
-          title: getGenreTitle(genre),
-          image: genreImages[genre],
-        }));
-
-        setGenres(preparedGenres);
-      } catch (error) {
-        console.error("Не удалось загрузить жанры:", error);
-        setHasError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void loadGenres();
+      setGenres(preparedGenres);
+    } catch (error) {
+      console.error("Не удалось подготовить жанры:", error);
+      setHasError(true);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   return (

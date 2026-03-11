@@ -76,7 +76,7 @@ export const GenreMoviesPage = () => {
           </Link>
 
           <h1 className="genre-movies-page__title">
-            {genre ? getGenreTitle(genre) : "Жанр"}
+            {genre ? getGenreTitle(genre as never) : "Жанр"}
           </h1>
         </div>
 

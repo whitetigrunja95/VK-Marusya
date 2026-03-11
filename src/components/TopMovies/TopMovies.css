@@ -89,33 +89,62 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .top-movies {
     margin-top: 48px;
     padding-bottom: 48px;
   }
 
   .top-movies__title {
-    margin-bottom: 24px;
-    font-size: 28px;
+    margin: 0 0 24px;
+    font-size: 32px;
+    line-height: 1.1;
   }
 
   .top-movies__grid {
-    grid-template-columns: repeat(2, minmax(0, 160px));
-    gap: 24px 16px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .top-movies__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top-movies__card {
+    flex: 0 0 224px;
+  }
+
+  .top-movies__poster-wrapper {
+    overflow: visible;
   }
 
   .top-movies__poster {
-    height: 240px;
+    width: 224px;
+    height: 336px;
+    border-radius: 16px;
   }
 
   .top-movies__rank {
-    top: 8px;
-    left: 8px;
-    min-width: 36px;
-    height: 36px;
-    padding: 0 8px;
-    font-size: 18px;
-    border-radius: 10px;
+    top: -12px;
+    left: -12px;
+    min-width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 420px) {
+  .top-movies__card {
+    flex: 0 0 220px;
+  }
+
+  .top-movies__poster {
+    width: 220px;
+    height: 330px;
   }
 }

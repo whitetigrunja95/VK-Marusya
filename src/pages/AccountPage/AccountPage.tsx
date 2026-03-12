@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import heartIcon from "../../assets/icons/heart.svg";
+import accountIcon from "../../assets/icons/account.svg";
 import mailIcon from "../../assets/icons/mail.svg";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
@@ -112,25 +114,33 @@ export const AccountPage = () => {
 
         <div className="account-page__tabs">
           <button
-            className={`account-page__tab ${
-              activeTab === "favorites" ? "account-page__tab--active" : ""
-            }`}
+            className={`account-page__tab ${activeTab === "favorites" ? "account-page__tab--active" : ""
+              }`}
             type="button"
             onClick={() => setActiveTab("favorites")}
           >
-            <span className="account-page__tab-icon">♡</span>
-            <span>Избранные фильмы</span>
+            <img
+              className="account-page__tab-icon-image"
+              src={heartIcon}
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Избранное</span>
           </button>
 
           <button
-            className={`account-page__tab ${
-              activeTab === "settings" ? "account-page__tab--active" : ""
-            }`}
+            className={`account-page__tab ${activeTab === "settings" ? "account-page__tab--active" : ""
+              }`}
             type="button"
             onClick={() => setActiveTab("settings")}
           >
-            <span className="account-page__tab-icon">◌</span>
-            <span>Настройка аккаунта</span>
+            <img
+              className="account-page__tab-icon-image"
+              src={accountIcon}
+              alt=""
+              aria-hidden="true"
+            />
+            <span>Настройки</span>
           </button>
         </div>
 

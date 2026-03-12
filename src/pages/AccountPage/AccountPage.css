@@ -50,6 +50,19 @@
   line-height: 1;
 }
 
+.account-page__tab-icon-image {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: block;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.account-page__favorites {
+  min-width: 0;
+}
+
 .account-page__favorites-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 224px));
@@ -232,39 +245,96 @@
   .account-page__title {
     margin-bottom: 32px;
     font-size: 32px;
+    line-height: 1.1;
   }
 
   .account-page__tabs {
-    align-items: flex-start;
-    flex-direction: column;
+    display: flex;
+    align-items: center;
     gap: 24px;
     margin-bottom: 32px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .account-page__tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .account-page__tab {
+    flex: 0 0 auto;
+    gap: 10px;
+    padding-bottom: 10px;
     font-size: 20px;
+    white-space: nowrap;
   }
 
-  .account-page__tab-icon {
-    font-size: 24px;
+  .account-page__tab-icon-image {
+    width: 24px;
+    height: 24px;
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .account-page__favorites {
+    min-width: 0;
+    overflow: hidden;
+    margin-right: -20px;
   }
 
   .account-page__favorites-grid {
-    grid-template-columns: repeat(2, minmax(0, 160px));
-    gap: 24px 16px;
+    display: grid;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 224px;
+    column-gap: 40px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-top: 8px;
+    padding-right: 20px;
+    padding-bottom: 8px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .account-page__favorites-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .account-page__movie-card {
+    width: 224px;
+    min-width: 224px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+  }
+
+  .account-page__movie-link {
+    border-radius: 16px;
+  }
+
+  .account-page__movie-image,
+  .account-page__movie-placeholder {
+    aspect-ratio: 224 / 336;
   }
 
   .account-page__remove {
-    top: -14px;
-    right: -14px;
-    width: 36px;
-    height: 36px;
-    font-size: 28px;
+    display: none;
+  }
+
+  .account-page__settings {
+    max-width: 100%;
   }
 
   .account-page__settings-item {
-    gap: 16px;
     align-items: flex-start;
+    gap: 16px;
+  }
+
+  .account-page__settings-item + .account-page__settings-item {
+    margin-top: 24px;
   }
 
   .account-page__settings-icon {
@@ -281,16 +351,25 @@
     font-size: 22px;
   }
 
+  .account-page__settings-text {
+    gap: 6px;
+  }
+
   .account-page__settings-label {
     font-size: 16px;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.5);
   }
 
   .account-page__settings-value {
     font-size: 22px;
+    line-height: 1.2;
+    word-break: break-word;
   }
 
   .account-page__logout {
-    min-width: 220px;
+    width: 100%;
+    min-width: 0;
     height: 48px;
     margin-top: 36px;
     font-size: 18px;
@@ -298,5 +377,73 @@
 
   .account-page__message {
     font-size: 16px;
+    line-height: 1.4;
   }
 }
+
+@media (max-width: 480px) {
+  .account-page {
+    padding-top: 20px;
+    padding-bottom: 32px;
+  }
+
+  .account-page__title {
+    margin-bottom: 28px;
+    font-size: 24px;
+    line-height: 1.1;
+  }
+
+  .account-page__tabs {
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .account-page__tab {
+    gap: 8px;
+    padding-bottom: 8px;
+    font-size: 18px;
+  }
+
+  .account-page__tab-icon-image {
+    width: 20px;
+    height: 20px;
+  }
+
+  .account-page__tab--active::after {
+    height: 2px;
+  }
+
+  .account-page__favorites-grid {
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 224px;
+    column-gap: 40px;
+  }
+
+  .account-page__movie-card {
+    width: 224px;
+    min-width: 224px;
+  }
+
+  .account-page__movie-image,
+  .account-page__movie-placeholder {
+    aspect-ratio: 224 / 336;
+  }
+
+  .account-page__settings-label {
+    font-size: 14px;
+  }
+
+  .account-page__settings-value {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .account-page__logout {
+    height: 56px;
+    margin-top: 32px;
+    font-size: 16px;
+  }
+}
+

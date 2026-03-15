@@ -143,10 +143,11 @@ export const Header = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+    } catch (error) {
+      console.error("Ошибка при выходе из аккаунта:", error);
+    } finally {
       setCurrentUser(null);
       navigate("/");
-    } catch (error) {
-      console.error("Не удалось выполнить выход:", error);
     }
   };
 

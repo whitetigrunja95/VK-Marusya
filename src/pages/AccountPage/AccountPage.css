@@ -1,35 +1,35 @@
 .account-page {
-  padding-top: 24px;
-  padding-bottom: 80px;
+  padding-top: 64px;
+  padding-bottom: 406px;
 }
 
 .account-page__title {
-  margin: 0 0 40px;
+  margin: 0 0 64px;
   color: #ffffff;
   font-size: 48px;
-  line-height: 1.08;
+  line-height: 56px;
   font-weight: 700;
 }
 
 .account-page__tabs {
   display: flex;
   align-items: center;
-  gap: 32px;
-  margin-bottom: 48px;
+  gap: 54px;
+  margin-bottom: 64px;
 }
 
 .account-page__tab {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 0 12px;
+  gap: 8px;
+  padding: 0;
   border: none;
   background: transparent;
   color: #ffffff;
   font-family: inherit;
   font-size: 24px;
-  line-height: 1;
+  line-height: 32px;
   font-weight: 400;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -150,17 +150,14 @@
 }
 
 .account-page__settings {
-  max-width: 760px;
+  max-width: 482px;
 }
 
 .account-page__settings-item {
   display: flex;
   align-items: center;
-  gap: 24px;
-}
-
-.account-page__settings-item+.account-page__settings-item {
-  margin-top: 32px;
+  gap: 16px;
+  margin-bottom: 40px;
 }
 
 .account-page__settings-icon {
@@ -171,13 +168,14 @@
   height: 60px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: #d9d9d9;
+  background: var(--background-disabled, #FFFFFF80);
 }
 
 .account-page__settings-icon img {
   width: 26px;
   height: 26px;
   opacity: 0.95;
+  color: #ffffff;
 }
 
 .account-page__settings-icon--avatar {
@@ -185,27 +183,26 @@
   font-size: 24px;
   line-height: 1;
   font-weight: 700;
-  background: #4b587c;
+  background: var(--background-disabled, #FFFFFF80);
 }
 
 .account-page__settings-text {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
 .account-page__settings-label {
-  color: rgba(255, 255, 255, 0.5);
   font-size: 18px;
-  line-height: 1.25;
+  line-height: 24px;
   font-weight: 400;
 }
 
 .account-page__settings-value {
   color: #ffffff;
-  font-size: 30px;
-  line-height: 1.2;
+  font-size: 24px;
+  line-height: 32px;
   font-weight: 700;
   word-break: break-word;
 }
@@ -213,7 +210,7 @@
 .account-page__logout {
   min-width: 220px;
   height: 56px;
-  margin-top: 48px;
+  margin-top: 24px;
   padding: 0 24px;
   border: none;
   border-radius: 28px;

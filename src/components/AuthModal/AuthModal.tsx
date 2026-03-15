@@ -3,6 +3,7 @@ import logoAuth from "../../assets/icons/logo-auth.svg";
 import mailIcon from "../../assets/icons/mail.svg";
 import accountIcon from "../../assets/icons/account.svg";
 import keyIcon from "../../assets/icons/key.svg";
+import { loginUser, registerUser } from "../../api/authApi";
 import "./AuthModal.css";
 
 type AuthModalProps = {
@@ -28,35 +29,6 @@ type RegisterErrors = {
   emailExists?: boolean;
 };
 
-type StoredUser = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-};
-
-const USERS_STORAGE_KEY = "marusya_users";
-const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
-
-const getStoredUsers = (): StoredUser[] => {
-  const rawUsers = localStorage.getItem(USERS_STORAGE_KEY);
-
-  if (!rawUsers) {
-    return [];
-  }
-
-  try {
-    return JSON.parse(rawUsers) as StoredUser[];
-  } catch (error) {
-    console.error("Не удалось прочитать пользователей из localStorage:", error);
-    return [];
-  }
-};
-
-const saveStoredUsers = (users: StoredUser[]) => {
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
-};
-
 export const AuthModal = ({
   isOpen,
   onClose,
@@ -75,6 +47,8 @@ export const AuthModal = ({
   const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
   const [registerErrors, setRegisterErrors] = useState<RegisterErrors>({});
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (!isOpen) {
       setView("login");
@@ -89,8 +63,34 @@ export const AuthModal = ({
       setRegisterPassword("");
       setRegisterConfirmPassword("");
       setRegisterErrors({});
+      setIsSubmitting(false);
+      return;
     }
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) {
     return null;
@@ -100,11 +100,11 @@ export const AuthModal = ({
     view === "success"
       ? "auth-modal__content--success"
       : view === "register"
-        ? "auth-modal__content--register"
-        : "auth-modal__content--login"
+      ? "auth-modal__content--register"
+      : "auth-modal__content--login"
   }`;
 
-  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const errors: LoginErrors = {};
@@ -122,32 +122,24 @@ export const AuthModal = ({
       return;
     }
 
-    const users = getStoredUsers();
+    try {
+      setIsSubmitting(true);
+      setLoginErrors({});
 
-    const foundUser = users.find(
-      (user) =>
-        user.email === loginEmail.trim() && user.password === loginPassword
-    );
-
-    if (!foundUser) {
+      await loginUser(loginEmail.trim(), loginPassword);
+      onLoginSuccess(loginEmail.trim());
+      onClose();
+    } catch (error) {
+      console.error("Ошибка авторизации:", error);
       setLoginErrors({ credentials: true });
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
-
-    localStorage.setItem(
-      CURRENT_USER_STORAGE_KEY,
-      JSON.stringify({
-        email: foundUser.email,
-        firstName: foundUser.firstName,
-        lastName: foundUser.lastName,
-      })
-    );
-
-    onLoginSuccess(foundUser.firstName);
-    onClose();
   };
 
-  const handleRegisterSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRegisterSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     const errors: RegisterErrors = {};
@@ -181,37 +173,39 @@ export const AuthModal = ({
       errors.confirmPassword = true;
     }
 
-    const users = getStoredUsers();
-
-    const isEmailExists = users.some(
-      (user) => user.email === registerEmail.trim()
-    );
-
-    if (registerEmail.trim() && isEmailExists) {
-      errors.email = true;
-      errors.emailExists = true;
-    }
-
-    setRegisterErrors(errors);
-
     if (Object.keys(errors).length > 0) {
+      setRegisterErrors(errors);
       return;
     }
 
-    const newUser: StoredUser = {
-      email: registerEmail.trim(),
-      firstName: registerFirstName.trim(),
-      lastName: registerLastName.trim(),
-      password: registerPassword,
-    };
+    try {
+      setIsSubmitting(true);
+      setRegisterErrors({});
 
-    saveStoredUsers([...users, newUser]);
-    setView("success");
+      await registerUser(
+        registerEmail.trim(),
+        registerPassword,
+        registerFirstName.trim(),
+        registerLastName.trim()
+      );
+
+      setView("success");
+    } catch (error) {
+      console.error("Ошибка регистрации:", error);
+      setRegisterErrors({ email: true, emailExists: true });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="auth-modal">
-      <div className="auth-modal__overlay" onClick={onClose} />
+      <button
+        className="auth-modal__overlay"
+        type="button"
+        onClick={onClose}
+        aria-label="Закрыть окно"
+      />
 
       <div className={contentClassName} role="dialog" aria-modal="true">
         <button
@@ -235,9 +229,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={mailIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    loginErrors.email ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="email"
                   placeholder="Электронная почта"
                   value={loginEmail}
@@ -255,9 +247,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    loginErrors.password ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="password"
                   placeholder="Пароль"
                   value={loginPassword}
@@ -275,8 +265,8 @@ export const AuthModal = ({
               </p>
             )}
 
-            <button className="auth-modal__submit" type="submit">
-              Войти
+            <button className="auth-modal__submit" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Вход..." : "Войти"}
             </button>
 
             <button
@@ -304,9 +294,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={mailIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    registerErrors.email ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="email"
                   placeholder="Электронная почта"
                   value={registerEmail}
@@ -324,9 +312,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={accountIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    registerErrors.firstName ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="text"
                   placeholder="Имя"
                   value={registerFirstName}
@@ -344,9 +330,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={accountIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    registerErrors.lastName ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="text"
                   placeholder="Фамилия"
                   value={registerLastName}
@@ -364,9 +348,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    registerErrors.password ? "auth-modal__input--error" : ""
-                  }`}
+                  className="auth-modal__input"
                   type="password"
                   placeholder="Пароль"
                   value={registerPassword}
@@ -386,11 +368,7 @@ export const AuthModal = ({
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input
-                  className={`auth-modal__input ${
-                    registerErrors.confirmPassword
-                      ? "auth-modal__input--error"
-                      : ""
-                  }`}
+                  className="auth-modal__input"
                   type="password"
                   placeholder="Подтвердите пароль"
                   value={registerConfirmPassword}
@@ -408,8 +386,8 @@ export const AuthModal = ({
               </p>
             )}
 
-            <button className="auth-modal__submit" type="submit">
-              Создать аккаунт
+            <button className="auth-modal__submit" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Создание..." : "Создать аккаунт"}
             </button>
 
             <button

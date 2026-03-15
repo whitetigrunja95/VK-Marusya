@@ -1,16 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import refreshIcon from "../../assets/icons/refresh.svg";
 import { getRandomMovie } from "../../api/moviesApi";
+import { getProfile } from "../../api/authApi";
 import type { Movie } from "../../types/movie";
 import { TrailerModal } from "../TrailerModal/TrailerModal";
 import { RatingBadge } from "../RatingBadge/RatingBadge";
 import { HeartIcon } from "../icons/HeartIcon";
+import { AuthModal } from "../AuthModal/AuthModal";
 import "./HeroMovie.css";
 
 type HeroMovieProps = {
   movie?: Movie;
   showRefreshButton?: boolean;
   showAboutButton?: boolean;
+};
+
+type CurrentUser = {
+  email: string;
+  firstName: string;
+  lastName: string;
 };
 
 const FAVORITES_STORAGE_KEY = "marusya_favorites";
@@ -45,6 +53,18 @@ const getStoredFavorites = (): Movie[] => {
   }
 };
 
+const mapProfileToCurrentUser = (profile: {
+  email: string;
+  name: string;
+  surname: string;
+}) => {
+  return {
+    email: profile.email,
+    firstName: profile.name,
+    lastName: profile.surname,
+  };
+};
+
 export const HeroMovie = ({
   movie: movieFromProps,
   showRefreshButton = true,
@@ -55,6 +75,8 @@ export const HeroMovie = ({
   const [hasError, setHasError] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const isExternalMovie = Boolean(movieFromProps);
 
@@ -82,6 +104,26 @@ export const HeroMovie = ({
   };
 
   useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profile = await getProfile();
+
+        if (!profile) {
+          setCurrentUser(null);
+          return;
+        }
+
+        setCurrentUser(mapProfileToCurrentUser(profile));
+      } catch (error) {
+        console.error("Не удалось получить профиль пользователя:", error);
+        setCurrentUser(null);
+      }
+    };
+
+    void loadProfile();
+  }, []);
+
+  useEffect(() => {
     if (movieFromProps) {
       setIsLoading(false);
       setHasError(false);
@@ -105,33 +147,86 @@ export const HeroMovie = ({
     setIsFavorite(isMovieInFavorites);
   }, [movie]);
 
-  const handleToggleFavorite = () => {
+  const handleToggleFavorite = async () => {
     if (!movie) {
       return;
     }
 
-    const favorites = getStoredFavorites();
-    const isMovieInFavorites = favorites.some(
-      (favoriteMovie) => favoriteMovie.id === movie.id
-    );
+    try {
+      const profile = await getProfile();
 
-    if (isMovieInFavorites) {
-      const updatedFavorites = favorites.filter(
-        (favoriteMovie) => favoriteMovie.id !== movie.id
+      if (!profile) {
+        setCurrentUser(null);
+        setIsAuthModalOpen(true);
+        return;
+      }
+
+      setCurrentUser(mapProfileToCurrentUser(profile));
+
+      const favorites = getStoredFavorites();
+      const isMovieInFavorites = favorites.some(
+        (favoriteMovie) => favoriteMovie.id === movie.id
       );
 
-      localStorage.setItem(
-        FAVORITES_STORAGE_KEY,
-        JSON.stringify(updatedFavorites)
-      );
-      setIsFavorite(false);
-      return;
+      if (isMovieInFavorites) {
+        const updatedFavorites = favorites.filter(
+          (favoriteMovie) => favoriteMovie.id !== movie.id
+        );
+
+        localStorage.setItem(
+          FAVORITES_STORAGE_KEY,
+          JSON.stringify(updatedFavorites)
+        );
+        setIsFavorite(false);
+        return;
+      }
+
+      const updatedFavorites = [...favorites, movie];
+
+      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
+      setIsFavorite(true);
+    } catch (error) {
+      console.error("Не удалось проверить сессию пользователя:", error);
+      setCurrentUser(null);
+      setIsAuthModalOpen(true);
     }
+  };
 
-    const updatedFavorites = [...favorites, movie];
+  const handleLoginSuccess = async () => {
+    try {
+      const profile = await getProfile();
 
-    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
-    setIsFavorite(true);
+      if (!profile) {
+        setCurrentUser(null);
+        return;
+      }
+
+      setCurrentUser(mapProfileToCurrentUser(profile));
+
+      if (!movie) {
+        return;
+      }
+
+      const favorites = getStoredFavorites();
+      const isMovieInFavorites = favorites.some(
+        (favoriteMovie) => favoriteMovie.id === movie.id
+      );
+
+      if (!isMovieInFavorites) {
+        const updatedFavorites = [...favorites, movie];
+        localStorage.setItem(
+          FAVORITES_STORAGE_KEY,
+          JSON.stringify(updatedFavorites)
+        );
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error(
+        "Не удалось обновить текущего пользователя после входа:",
+        error
+      );
+      setCurrentUser(null);
+    }
   };
 
   if (isLoading) {
@@ -148,33 +243,40 @@ export const HeroMovie = ({
 
   if (hasError || !movie) {
     return (
-      <section className="hero-movie">
-        <div className="hero-movie__content">
-          <div className="hero-movie__info">
-            <p className="hero-movie__description">
-              Не удалось загрузить фильм. Попробуй обновить страницу.
-            </p>
+      <>
+        <section className="hero-movie">
+          <div className="hero-movie__content">
+            <div className="hero-movie__info">
+              <p className="hero-movie__description">
+                Не удалось загрузить фильм. Попробуй обновить страницу.
+              </p>
 
-            {!isExternalMovie && (
-              <div
-                className={`hero-movie__actions${
-                  !showAboutButton && !showRefreshButton
-                    ? " hero-movie__actions--movie-page"
-                    : ""
-                }`}
-              >
-                <button
-                  className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
-                  type="button"
-                  onClick={loadRandomMovie}
+              {!isExternalMovie && (
+                <div
+                  className={`hero-movie__actions${!showAboutButton && !showRefreshButton
+                      ? " hero-movie__actions--movie-page"
+                      : ""
+                    }`}
                 >
-                  Попробовать снова
-                </button>
-              </div>
-            )}
+                  <button
+                    className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
+                    type="button"
+                    onClick={loadRandomMovie}
+                  >
+                    Попробовать снова
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onLoginSuccess={handleLoginSuccess}
+        />
+      </>
     );
   }
 
@@ -209,11 +311,10 @@ export const HeroMovie = ({
             <p className="hero-movie__description">{description}</p>
 
             <div
-              className={`hero-movie__actions${
-                !showAboutButton && !showRefreshButton
+              className={`hero-movie__actions${!showAboutButton && !showRefreshButton
                   ? " hero-movie__actions--movie-page"
                   : ""
-              }`}
+                }`}
             >
               {movie.trailerUrl && (
                 <button
@@ -235,9 +336,8 @@ export const HeroMovie = ({
               )}
 
               <button
-                className={`hero-movie__icon-button ui-icon-button${
-                  isFavorite ? " hero-movie__icon-button--active" : ""
-                }`}
+                className={`hero-movie__icon-button ui-icon-button${isFavorite ? " hero-movie__icon-button--active" : ""
+                  }`}
                 type="button"
                 aria-label={
                   isFavorite ? "Удалить из избранного" : "Добавить в избранное"
@@ -274,6 +374,12 @@ export const HeroMovie = ({
         trailerUrl={movie.trailerUrl}
         title={movie.title}
         onClose={() => setIsTrailerOpen(false)}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </>
   );

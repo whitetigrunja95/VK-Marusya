@@ -1,18 +1,18 @@
 .footer {
-  padding: 80px 0 32px;
+  margin: 0 0 40px;
 }
 
 .footer__container {
   width: min(100%, 1264px);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0;
 }
 
 .footer__socials {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 .footer__social-link {

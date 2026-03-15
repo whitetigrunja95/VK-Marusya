@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import heartIcon from "../../assets/icons/heart.svg";
 import accountIcon from "../../assets/icons/account.svg";
 import mailIcon from "../../assets/icons/mail.svg";
+import { getProfile, logoutUser } from "../../api/authApi";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
 import "./AccountPage.css";
@@ -15,26 +16,7 @@ type CurrentUser = {
   lastName: string;
 };
 
-const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
 const FAVORITES_STORAGE_KEY = "marusya_favorites";
-
-const getStoredCurrentUser = (): CurrentUser | null => {
-  const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-
-  if (!rawCurrentUser) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(rawCurrentUser) as CurrentUser;
-  } catch (error) {
-    console.error(
-      "Не удалось прочитать текущего пользователя из localStorage:",
-      error
-    );
-    return null;
-  }
-};
 
 const getStoredFavorites = (): Movie[] => {
   const rawFavorites = localStorage.getItem(FAVORITES_STORAGE_KEY);
@@ -54,6 +36,18 @@ const getStoredFavorites = (): Movie[] => {
   }
 };
 
+const mapProfileToCurrentUser = (profile: {
+  email: string;
+  name: string;
+  surname: string;
+}) => {
+  return {
+    email: profile.email,
+    firstName: profile.name,
+    lastName: profile.surname,
+  };
+};
+
 export const AccountPage = () => {
   const navigate = useNavigate();
 
@@ -62,13 +56,30 @@ export const AccountPage = () => {
   const [favorites, setFavorites] = useState<Movie[]>([]);
 
   useEffect(() => {
-    setCurrentUser(getStoredCurrentUser());
+    const loadProfile = async () => {
+      try {
+        const profile = await getProfile();
+
+        if (!profile) {
+          setCurrentUser(null);
+          navigate("/");
+          return;
+        }
+
+        setCurrentUser(mapProfileToCurrentUser(profile));
+      } catch (error) {
+        console.error("Не удалось получить профиль пользователя:", error);
+        setCurrentUser(null);
+        navigate("/");
+      }
+    };
+
+    void loadProfile();
     setFavorites(getStoredFavorites());
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const handleStorageUpdate = () => {
-      setCurrentUser(getStoredCurrentUser());
       setFavorites(getStoredFavorites());
     };
 
@@ -105,9 +116,14 @@ export const AccountPage = () => {
     localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setCurrentUser(null);
+      navigate("/");
+    } catch (error) {
+      console.error("Не удалось выполнить выход:", error);
+    }
   };
 
   return (

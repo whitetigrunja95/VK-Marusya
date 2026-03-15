@@ -5,12 +5,11 @@ import { MenuIcon } from "../icons/MenuIcon";
 import { SearchIcon } from "../icons/SearchIcon";
 import { AccountIcon } from "../icons/AccountIcon";
 import { searchMovies } from "../../api/moviesApi";
+import { getProfile, logoutUser } from "../../api/authApi";
 import type { Movie } from "../../types/movie";
 import { AuthModal } from "../AuthModal/AuthModal";
 import { RatingBadge } from "../RatingBadge/RatingBadge";
 import "./Header.css";
-
-const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
 
 type CurrentUser = {
   email: string;
@@ -33,6 +32,18 @@ const formatRuntime = (minutes?: number) => {
   return `${hours} ч ${remainingMinutes} мин`;
 };
 
+const mapProfileToCurrentUser = (profile: {
+  email: string;
+  name: string;
+  surname: string;
+}) => {
+  return {
+    email: profile.email,
+    firstName: profile.name,
+    lastName: profile.surname,
+  };
+};
+
 export const Header = () => {
   const navigate = useNavigate();
 
@@ -46,21 +57,23 @@ export const Header = () => {
   const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
 
   useEffect(() => {
-    const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+    const loadProfile = async () => {
+      try {
+        const profile = await getProfile();
 
-    if (!rawCurrentUser) {
-      return;
-    }
+        if (!profile) {
+          setCurrentUser(null);
+          return;
+        }
 
-    try {
-      const parsedUser = JSON.parse(rawCurrentUser) as CurrentUser;
-      setCurrentUser(parsedUser);
-    } catch (error) {
-      console.error(
-        "Не удалось прочитать текущего пользователя из localStorage:",
-        error
-      );
-    }
+        setCurrentUser(mapProfileToCurrentUser(profile));
+      } catch (error) {
+        console.error("Не удалось получить профиль пользователя:", error);
+        setCurrentUser(null);
+      }
+    };
+
+    void loadProfile();
   }, []);
 
   useEffect(() => {
@@ -108,37 +121,33 @@ export const Header = () => {
     };
   }, []);
 
-  const handleLoginSuccess = (userName: string) => {
-    const rawCurrentUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-
-    if (!rawCurrentUser) {
-      setCurrentUser({
-        email: "",
-        firstName: userName,
-        lastName: "",
-      });
-      return;
-    }
-
+  const handleLoginSuccess = async () => {
     try {
-      const parsedUser = JSON.parse(rawCurrentUser) as CurrentUser;
-      setCurrentUser(parsedUser);
+      const profile = await getProfile();
+
+      if (!profile) {
+        setCurrentUser(null);
+        return;
+      }
+
+      setCurrentUser(mapProfileToCurrentUser(profile));
     } catch (error) {
       console.error(
         "Не удалось обновить текущего пользователя после входа:",
         error
       );
-      setCurrentUser({
-        email: "",
-        firstName: userName,
-        lastName: "",
-      });
+      setCurrentUser(null);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setCurrentUser(null);
+      navigate("/");
+    } catch (error) {
+      console.error("Не удалось выполнить выход:", error);
+    }
   };
 
   const handleClearSearch = () => {
@@ -246,7 +255,9 @@ export const Header = () => {
                             <div className="header__search-info">
                               <div className="header__search-meta">
                                 <RatingBadge
-                                  rating={typeof rating === "number" ? rating : null}
+                                  rating={
+                                    typeof rating === "number" ? rating : null
+                                  }
                                   className="header__search-rating"
                                 />
 
@@ -399,7 +410,9 @@ export const Header = () => {
                               <div className="header__mobile-search-card-info">
                                 <div className="header__mobile-search-meta">
                                   <RatingBadge
-                                    rating={typeof rating === "number" ? rating : null}
+                                    rating={
+                                      typeof rating === "number" ? rating : null
+                                    }
                                     className="header__mobile-search-rating"
                                   />
 

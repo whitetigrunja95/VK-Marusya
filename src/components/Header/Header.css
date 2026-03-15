@@ -9,7 +9,7 @@
   padding: 24px 20px 0;
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 40px;
 }
 
 .header__logo {
@@ -36,7 +36,7 @@
   position: relative;
   color: #ffffff;
   font-size: 24px;
-  line-height: 1;
+  line-height: 3.2;
   font-weight: 400;
   text-decoration: none;
   transition: opacity 0.2s ease;
@@ -54,7 +54,7 @@
   content: "";
   position: absolute;
   left: 0;
-  bottom: -14px;
+  bottom: 8px;
   width: 100%;
   height: 2px;
   border-radius: 999px;
@@ -65,13 +65,13 @@
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 80px;
   min-width: 0;
 }
 
 .header__search-wrapper {
   position: relative;
-  width: 560px;
+  width: 656px;
   max-width: 100%;
 }
 
@@ -81,7 +81,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 20px;
+  padding: 0 12px;
   border-radius: 8px;
   background: rgba(57, 59, 72, 0.8);
   box-sizing: border-box;
@@ -97,6 +97,8 @@
   flex-shrink: 0;
   font-size: 24px;
   line-height: 1;
+  width: 24px;
+  height: 24px;
   color: rgba(255, 255, 255, 0.5);
 }
 

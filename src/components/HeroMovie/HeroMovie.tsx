@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import heartIcon from "../../assets/icons/heart.svg";
 import refreshIcon from "../../assets/icons/refresh.svg";
 import { getRandomMovie } from "../../api/moviesApi";
 import type { Movie } from "../../types/movie";
 import { TrailerModal } from "../TrailerModal/TrailerModal";
+import { RatingBadge } from "../RatingBadge/RatingBadge";
+import { HeartIcon } from "../icons/HeartIcon";
 import "./HeroMovie.css";
 
 type HeroMovieProps = {
@@ -155,9 +156,15 @@ export const HeroMovie = ({
             </p>
 
             {!isExternalMovie && (
-              <div className={`hero-movie__actions ${!showAboutButton && !showRefreshButton ? "hero-movie__actions--movie-page" : ""}`} >
+              <div
+                className={`hero-movie__actions${
+                  !showAboutButton && !showRefreshButton
+                    ? " hero-movie__actions--movie-page"
+                    : ""
+                }`}
+              >
                 <button
-                  className="hero-movie__button hero-movie__button--primary"
+                  className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
                   type="button"
                   onClick={loadRandomMovie}
                 >
@@ -182,9 +189,7 @@ export const HeroMovie = ({
         <div className="hero-movie__content">
           <div className="hero-movie__info">
             <div className="hero-movie__meta">
-              <span className="hero-movie__rating">
-                ★ {typeof rating === "number" ? rating.toFixed(1) : "—"}
-              </span>
+              <RatingBadge rating={typeof rating === "number" ? rating : null} />
 
               <span className="hero-movie__meta-text">
                 {movie.releaseYear ?? "—"}
@@ -204,14 +209,15 @@ export const HeroMovie = ({
             <p className="hero-movie__description">{description}</p>
 
             <div
-              className={`hero-movie__actions${!showAboutButton && !showRefreshButton
+              className={`hero-movie__actions${
+                !showAboutButton && !showRefreshButton
                   ? " hero-movie__actions--movie-page"
                   : ""
-                }`}
+              }`}
             >
               {movie.trailerUrl && (
                 <button
-                  className="hero-movie__button hero-movie__button--primary"
+                  className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
                   type="button"
                   onClick={() => setIsTrailerOpen(true)}
                 >
@@ -221,7 +227,7 @@ export const HeroMovie = ({
 
               {showAboutButton && (
                 <a
-                  className="hero-movie__button hero-movie__button--secondary hero-movie__link-button"
+                  className="hero-movie__button hero-movie__button--secondary hero-movie__link-button ui-button ui-button--secondary"
                   href="#about-movie"
                 >
                   О фильме
@@ -229,20 +235,24 @@ export const HeroMovie = ({
               )}
 
               <button
-                className={`hero-movie__icon-button ${isFavorite ? "hero-movie__icon-button--active" : ""
-                  }`}
+                className={`hero-movie__icon-button ui-icon-button${
+                  isFavorite ? " hero-movie__icon-button--active" : ""
+                }`}
                 type="button"
                 aria-label={
                   isFavorite ? "Удалить из избранного" : "Добавить в избранное"
                 }
                 onClick={handleToggleFavorite}
               >
-                <img src={heartIcon} alt="" />
+                <HeartIcon
+                  isFilled={isFavorite}
+                  className="hero-movie__heart-icon"
+                />
               </button>
 
               {showRefreshButton && !isExternalMovie && (
                 <button
-                  className="hero-movie__icon-button"
+                  className="hero-movie__icon-button ui-icon-button"
                   type="button"
                   aria-label="Показать другой фильм"
                   onClick={loadRandomMovie}

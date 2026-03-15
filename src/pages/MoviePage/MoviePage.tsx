@@ -6,6 +6,18 @@ import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
 import "./MoviePage.css";
 
+const formatMoney = (value?: string | number) => {
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "number") {
+    return new Intl.NumberFormat("ru-RU").format(value);
+  }
+
+  return String(value);
+};
+
 export const MoviePage = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -82,7 +94,7 @@ export const MoviePage = () => {
                     <div className="movie-about__row">
                       <span className="movie-about__label">Бюджет</span>
                       <span className="movie-about__dots" />
-                      <span className="movie-about__value">{movie.budget}</span>
+                      <span className="movie-about__value">{formatMoney(movie.budget)}</span>
                     </div>
                   )}
 
@@ -90,7 +102,7 @@ export const MoviePage = () => {
                     <div className="movie-about__row">
                       <span className="movie-about__label">Выручка</span>
                       <span className="movie-about__dots" />
-                      <span className="movie-about__value">{movie.revenue}</span>
+                      <span className="movie-about__value">{formatMoney(movie.revenue)}</span>
                     </div>
                   )}
 

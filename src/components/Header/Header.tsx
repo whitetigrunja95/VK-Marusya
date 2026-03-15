@@ -7,6 +7,7 @@ import { AccountIcon } from "../icons/AccountIcon";
 import { searchMovies } from "../../api/moviesApi";
 import type { Movie } from "../../types/movie";
 import { AuthModal } from "../AuthModal/AuthModal";
+import { RatingBadge } from "../RatingBadge/RatingBadge";
 import "./Header.css";
 
 const CURRENT_USER_STORAGE_KEY = "marusya_current_user";
@@ -244,12 +245,10 @@ export const Header = () => {
 
                             <div className="header__search-info">
                               <div className="header__search-meta">
-                                <span className="header__search-rating">
-                                  ★{" "}
-                                  {typeof rating === "number"
-                                    ? rating.toFixed(1)
-                                    : "—"}
-                                </span>
+                                <RatingBadge
+                                  rating={typeof rating === "number" ? rating : null}
+                                  className="header__search-rating"
+                                />
 
                                 <span className="header__search-meta-text">
                                   {movie.releaseYear ?? "—"}
@@ -399,12 +398,10 @@ export const Header = () => {
 
                               <div className="header__mobile-search-card-info">
                                 <div className="header__mobile-search-meta">
-                                  <span className="header__mobile-search-rating">
-                                    ★{" "}
-                                    {typeof rating === "number"
-                                      ? rating.toFixed(1)
-                                      : "—"}
-                                  </span>
+                                  <RatingBadge
+                                    rating={typeof rating === "number" ? rating : null}
+                                    className="header__mobile-search-rating"
+                                  />
 
                                   <span className="header__mobile-search-meta-text">
                                     {movie.releaseYear ?? "—"}

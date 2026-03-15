@@ -84,7 +84,10 @@ export const AccountPage = () => {
       return "";
     }
 
-    return `${currentUser.firstName.charAt(0)}${currentUser.lastName.charAt(0)}`.toUpperCase();
+    const firstInitial = currentUser.firstName?.charAt(0) ?? "";
+    const lastInitial = currentUser.lastName?.charAt(0) ?? "";
+
+    return `${firstInitial}${lastInitial}`.toUpperCase();
   }, [currentUser]);
 
   const fullName = useMemo(() => {
@@ -92,7 +95,7 @@ export const AccountPage = () => {
       return "";
     }
 
-    return `${currentUser.firstName} ${currentUser.lastName}`;
+    return `${currentUser.firstName} ${currentUser.lastName}`.trim();
   }, [currentUser]);
 
   const handleRemoveFavorite = (movieId: number | string) => {
@@ -114,8 +117,9 @@ export const AccountPage = () => {
 
         <div className="account-page__tabs">
           <button
-            className={`account-page__tab ${activeTab === "favorites" ? "account-page__tab--active" : ""
-              }`}
+            className={`account-page__tab ${
+              activeTab === "favorites" ? "account-page__tab--active" : ""
+            }`}
             type="button"
             onClick={() => setActiveTab("favorites")}
           >
@@ -129,8 +133,9 @@ export const AccountPage = () => {
           </button>
 
           <button
-            className={`account-page__tab ${activeTab === "settings" ? "account-page__tab--active" : ""
-              }`}
+            className={`account-page__tab ${
+              activeTab === "settings" ? "account-page__tab--active" : ""
+            }`}
             type="button"
             onClick={() => setActiveTab("settings")}
           >
@@ -221,7 +226,7 @@ export const AccountPage = () => {
                 </div>
 
                 <button
-                  className="account-page__logout"
+                  className="account-page__logout ui-button ui-button--primary"
                   type="button"
                   onClick={handleLogout}
                 >

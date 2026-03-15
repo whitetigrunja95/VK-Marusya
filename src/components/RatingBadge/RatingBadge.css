@@ -1,0 +1,55 @@
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 60px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rating-badge__star {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.rating-badge__value {
+  line-height: 1;
+}
+
+.rating-badge--green {
+  background: #308e21;
+}
+
+.rating-badge--yellow {
+  background: #a59400;
+}
+
+.rating-badge--gray {
+  background: #777777;
+}
+
+.rating-badge--red {
+  background: #c82020;
+}
+
+@media (max-width: 767px) {
+  .rating-badge {
+    min-width: 52px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .rating-badge__star {
+    font-size: 11px;
+  }
+}

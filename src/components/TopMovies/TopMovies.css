@@ -1,13 +1,13 @@
 .top-movies {
-  margin-top: 76px;
-  padding-bottom: 84px;
+  margin-top: 72px;
+  padding-bottom: 80px;
 }
 
 .top-movies__title {
-  margin: 0 0 60px;
+  margin: 0 0 40px;
   color: #ffffff;
-  font-size: 64px;
-  line-height: 1;
+  font-size: 40px;
+  line-height: 1.1;
   font-weight: 700;
 }
 
@@ -20,7 +20,7 @@
 .top-movies__grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 224px));
-  gap: 64px 40px;
+  gap: 40px;
 }
 
 .top-movies__card {
@@ -28,62 +28,88 @@
   display: block;
   color: inherit;
   text-decoration: none;
+  transition: transform 0.25s ease;
+}
+
+.top-movies__card:hover,
+.top-movies__card:focus-visible {
+  transform: translateY(-4px);
 }
 
 .top-movies__poster-wrapper {
   position: relative;
   width: 100%;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
+}
+
+.top-movies__poster-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  z-index: 0;
+  border-radius: 24px;
+  background: transparent;
+  box-shadow:
+    0 0 80px rgba(255, 255, 255, 0.12),
+    0 0 40px rgba(255, 255, 255, 0.08);
+  pointer-events: none;
 }
 
 .top-movies__poster {
+  position: relative;
+  z-index: 1;
   display: block;
   width: 100%;
   height: 336px;
   border-radius: 16px;
   object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease;
 }
 
 .top-movies__card:hover .top-movies__poster,
 .top-movies__card:focus-visible .top-movies__poster {
-  transform: scale(1.05);
+  transform: scale(1.03);
 }
 
 .top-movies__rank {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 1;
+  top: -12px;
+  left: -12px;
+  z-index: 2;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 48px;
+
   height: 48px;
-  padding: 0 12px;
-  border-radius: 12px;
-  background-color: #ffffff;
+  padding: 8px 24px;
+
+  border-radius: 50px;
+
+  background: #ffffff;
   color: #6a5cff;
+
   font-size: 24px;
   line-height: 1;
   font-weight: 700;
+
   box-sizing: border-box;
 }
 
 @media (max-width: 1280px) {
-  .top-movies__title {
-    margin-bottom: 40px;
-    font-size: 48px;
-  }
-
   .top-movies__grid {
     grid-template-columns: repeat(4, minmax(0, 224px));
-    gap: 40px 24px;
+    gap: 32px 24px;
   }
 }
 
 @media (max-width: 1024px) {
+  .top-movies__title {
+    font-size: 36px;
+  }
+
   .top-movies__grid {
     grid-template-columns: repeat(3, minmax(0, 224px));
   }
@@ -97,8 +123,8 @@
 
   .top-movies__title {
     margin: 0 0 24px;
-    font-size: 32px;
-    line-height: 1.1;
+    font-size: 24px;
+    line-height: 1.15;
   }
 
   .top-movies__grid {
@@ -106,7 +132,7 @@
     gap: 16px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-bottom: 8px;
+    padding: 12px 0 8px 8px;
     scrollbar-width: none;
   }
 
@@ -118,22 +144,16 @@
     flex: 0 0 224px;
   }
 
-  .top-movies__poster-wrapper {
-    overflow: visible;
-  }
-
   .top-movies__poster {
     width: 224px;
     height: 336px;
-    border-radius: 16px;
   }
 
   .top-movies__rank {
     top: -12px;
     left: -12px;
-    min-width: 56px;
-    height: 56px;
-    border-radius: 50%;
+    min-width: 48px;
+    height: 48px;
     font-size: 20px;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import "./TrailerModal.css";
 
 type TrailerModalProps = {
@@ -42,16 +42,6 @@ export const TrailerModal = ({
   title,
   onClose,
 }: TrailerModalProps) => {
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setIsPaused(false);
-      setIsHovered(false);
-    }
-  }, [isOpen]);
-
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -63,9 +53,11 @@ export const TrailerModal = ({
       }
     };
 
+    document.body.style.overflow = "hidden";
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      document.body.style.overflow = "";
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
@@ -78,13 +70,14 @@ export const TrailerModal = ({
     return null;
   }
 
-  const handleTogglePause = () => {
-    setIsPaused((prev) => !prev);
-  };
-
   return (
-    <div className="trailer-modal">
-      <div className="trailer-modal__overlay" onClick={onClose} />
+    <div className="trailer-modal" role="dialog" aria-modal="true" aria-label={title}>
+      <button
+        className="trailer-modal__overlay"
+        type="button"
+        aria-label="Закрыть трейлер"
+        onClick={onClose}
+      />
 
       <div className="trailer-modal__content">
         <button
@@ -96,14 +89,7 @@ export const TrailerModal = ({
           ×
         </button>
 
-        <div
-          className={`trailer-modal__player ${
-            isPaused ? "trailer-modal__player--paused" : ""
-          }`}
-          onClick={handleTogglePause}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="trailer-modal__player">
           <iframe
             className="trailer-modal__iframe"
             src={embedUrl}
@@ -111,22 +97,10 @@ export const TrailerModal = ({
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
           />
+        </div>
 
-          {isPaused && (
-            <div
-              className={`trailer-modal__pause-overlay ${
-                isHovered ? "trailer-modal__pause-overlay--hovered" : ""
-              }`}
-            >
-              <div className="trailer-modal__pause-center">
-                <span className="trailer-modal__pause-icon">▶</span>
-              </div>
-
-              <div className="trailer-modal__title-bar">
-                <span className="trailer-modal__title">{title}</span>
-              </div>
-            </div>
-          )}
+        <div className="trailer-modal__footer">
+          <h2 className="trailer-modal__title">{title}</h2>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import logoAuth from "../../assets/icons/logo-auth.svg";
 import mailIcon from "../../assets/icons/mail.svg";
 import accountIcon from "../../assets/icons/account.svg";
 import keyIcon from "../../assets/icons/key.svg";
+import { CloseIcon } from "../icons/CloseIcon";
 import { loginUser, registerUser } from "../../api/authApi";
 import "./AuthModal.css";
 
@@ -96,13 +97,12 @@ export const AuthModal = ({
     return null;
   }
 
-  const contentClassName = `auth-modal__content ${
-    view === "success"
+  const contentClassName = `auth-modal__content ${view === "success"
       ? "auth-modal__content--success"
       : view === "register"
-      ? "auth-modal__content--register"
-      : "auth-modal__content--login"
-  }`;
+        ? "auth-modal__content--register"
+        : "auth-modal__content--login"
+    }`;
 
   const handleLoginSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -214,7 +214,7 @@ export const AuthModal = ({
           onClick={onClose}
           aria-label="Закрыть окно"
         >
-          ×
+          <CloseIcon className="auth-modal__close-icon" />
         </button>
 
         <img className="auth-modal__logo" src={logoAuth} alt="Маруся" />
@@ -223,9 +223,8 @@ export const AuthModal = ({
           <form className="auth-modal__form" onSubmit={handleLoginSubmit}>
             <div className="auth-modal__fields">
               <div
-                className={`auth-modal__field ${
-                  loginErrors.email ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${loginErrors.email ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={mailIcon} alt="" />
                 <input
@@ -241,9 +240,8 @@ export const AuthModal = ({
               </div>
 
               <div
-                className={`auth-modal__field ${
-                  loginErrors.password ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${loginErrors.password ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input
@@ -288,9 +286,8 @@ export const AuthModal = ({
 
             <div className="auth-modal__fields">
               <div
-                className={`auth-modal__field ${
-                  registerErrors.email ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${registerErrors.email ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={mailIcon} alt="" />
                 <input
@@ -306,9 +303,8 @@ export const AuthModal = ({
               </div>
 
               <div
-                className={`auth-modal__field ${
-                  registerErrors.firstName ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${registerErrors.firstName ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={accountIcon} alt="" />
                 <input
@@ -324,9 +320,8 @@ export const AuthModal = ({
               </div>
 
               <div
-                className={`auth-modal__field ${
-                  registerErrors.lastName ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${registerErrors.lastName ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={accountIcon} alt="" />
                 <input
@@ -342,9 +337,8 @@ export const AuthModal = ({
               </div>
 
               <div
-                className={`auth-modal__field ${
-                  registerErrors.password ? "auth-modal__field--error" : ""
-                }`}
+                className={`auth-modal__field ${registerErrors.password ? "auth-modal__field--error" : ""
+                  }`}
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input
@@ -360,11 +354,10 @@ export const AuthModal = ({
               </div>
 
               <div
-                className={`auth-modal__field ${
-                  registerErrors.confirmPassword
+                className={`auth-modal__field ${registerErrors.confirmPassword
                     ? "auth-modal__field--error"
                     : ""
-                }`}
+                  }`}
               >
                 <img className="auth-modal__icon" src={keyIcon} alt="" />
                 <input

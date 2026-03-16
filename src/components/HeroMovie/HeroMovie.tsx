@@ -84,6 +84,13 @@ export const HeroMovie = ({
     return movieFromProps ?? randomMovie;
   }, [movieFromProps, randomMovie]);
 
+  const actionsClassName = [
+    "hero-movie__actions",
+    showRefreshButton
+      ? "hero-movie__actions--home"
+      : "hero-movie__actions--movie",
+  ].join(" ");
+
   const loadRandomMovie = async () => {
     if (isExternalMovie) {
       return;
@@ -183,7 +190,10 @@ export const HeroMovie = ({
 
       const updatedFavorites = [...favorites, movie];
 
-      localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(updatedFavorites));
+      localStorage.setItem(
+        FAVORITES_STORAGE_KEY,
+        JSON.stringify(updatedFavorites)
+      );
       setIsFavorite(true);
     } catch (error) {
       console.error("Не удалось проверить сессию пользователя:", error);
@@ -252,12 +262,7 @@ export const HeroMovie = ({
               </p>
 
               {!isExternalMovie && (
-                <div
-                  className={`hero-movie__actions${!showAboutButton && !showRefreshButton
-                      ? " hero-movie__actions--movie-page"
-                      : ""
-                    }`}
-                >
+                <div className={actionsClassName}>
                   <button
                     className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
                     type="button"
@@ -310,12 +315,7 @@ export const HeroMovie = ({
 
             <p className="hero-movie__description">{description}</p>
 
-            <div
-              className={`hero-movie__actions${!showAboutButton && !showRefreshButton
-                  ? " hero-movie__actions--movie-page"
-                  : ""
-                }`}
-            >
+            <div className={actionsClassName}>
               {movie.trailerUrl && (
                 <button
                   className="hero-movie__button hero-movie__button--primary ui-button ui-button--primary"
@@ -336,8 +336,9 @@ export const HeroMovie = ({
               )}
 
               <button
-                className={`hero-movie__icon-button ui-icon-button${isFavorite ? " hero-movie__icon-button--active" : ""
-                  }`}
+                className={`hero-movie__icon-button ui-icon-button${
+                  isFavorite ? " hero-movie__icon-button--active" : ""
+                }`}
                 type="button"
                 aria-label={
                   isFavorite ? "Удалить из избранного" : "Добавить в избранное"

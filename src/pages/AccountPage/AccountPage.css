@@ -268,18 +268,19 @@
 @media (max-width: 767px) {
   .account-page {
     padding-top: 16px;
-    padding-bottom: 48px;
+    padding-bottom: 152px;
   }
 
   .account-page__title {
     margin-bottom: 24px;
     font-size: 24px;
-    line-height: 1.15;
+    line-height: 32px;
+    margin-bottom: 40px;
   }
 
   .account-page__tabs {
     gap: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
     overflow-x: auto;
     scrollbar-width: none;
   }
@@ -290,9 +291,10 @@
 
   .account-page__tab {
     flex: 0 0 auto;
-    gap: 10px;
+    gap: 4px;
     padding-bottom: 10px;
-    font-size: 18px;
+    font-size: 24px;
+    line-height: 32px;
     white-space: nowrap;
   }
 

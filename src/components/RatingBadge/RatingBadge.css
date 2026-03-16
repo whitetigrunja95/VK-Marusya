@@ -41,15 +41,17 @@
 
 @media (max-width: 767px) {
   .rating-badge {
-    min-width: 52px;
-    height: 24px;
-    padding: 0 8px;
-    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    height: 32px;
+    padding: 4px 12px;
+    border-radius: 16px;
     gap: 4px;
-    font-size: 12px;
   }
 
   .rating-badge__star {
-    font-size: 11px;
+    font-size: 14px;
   }
 }

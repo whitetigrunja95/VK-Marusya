@@ -322,7 +322,8 @@
   }
 
   .header__logo-image {
-    height: 28px;
+    width: 81px;
+    height: 32px;
   }
 
   .header__nav,
@@ -364,7 +365,7 @@
   .header__mobile-search {
     position: relative;
     z-index: 1;
-    width: 100%;
+    width: 335px;
   }
 
   .header__mobile-search-input-wrap {
@@ -374,7 +375,7 @@
     gap: 12px;
     padding: 0 16px;
     border-radius: 12px;
-    background: rgba(57, 59, 72, 0.96);
+    background: rgba(57, 59, 60, 1);
     box-sizing: border-box;
     backdrop-filter: blur(10px);
   }
@@ -418,10 +419,10 @@
   }
 
   .header__mobile-search-dropdown {
-    margin-top: 12px;
+    margin-top: 8px;
     padding: 16px;
     border-radius: 12px;
-    background: rgba(57, 59, 72, 0.96);
+    background: rgba(57, 59, 60, 1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(10px);
   }

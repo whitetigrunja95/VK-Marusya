@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import heartIcon from "../../assets/icons/heart.svg";
 import accountIcon from "../../assets/icons/account.svg";
-import mailIcon from "../../assets/icons/mail.svg";
+import { MailIcon } from "../../components/icons/MailIcon";
 import { getProfile, logoutUser } from "../../api/authApi";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
@@ -133,9 +133,8 @@ export const AccountPage = () => {
 
         <div className="account-page__tabs">
           <button
-            className={`account-page__tab ${
-              activeTab === "favorites" ? "account-page__tab--active" : ""
-            }`}
+            className={`account-page__tab ${activeTab === "favorites" ? "account-page__tab--active" : ""
+              }`}
             type="button"
             onClick={() => setActiveTab("favorites")}
           >
@@ -145,13 +144,17 @@ export const AccountPage = () => {
               alt=""
               aria-hidden="true"
             />
-            <span>Избранное</span>
+            <span className="account-page__tab-label account-page__tab-label--desktop">
+              Избранные фильмы
+            </span>
+            <span className="account-page__tab-label account-page__tab-label--mobile">
+              Избранное
+            </span>
           </button>
 
           <button
-            className={`account-page__tab ${
-              activeTab === "settings" ? "account-page__tab--active" : ""
-            }`}
+            className={`account-page__tab ${activeTab === "settings" ? "account-page__tab--active" : ""
+              }`}
             type="button"
             onClick={() => setActiveTab("settings")}
           >
@@ -161,7 +164,12 @@ export const AccountPage = () => {
               alt=""
               aria-hidden="true"
             />
-            <span>Настройки</span>
+            <span className="account-page__tab-label account-page__tab-label--desktop">
+              Настройки аккаунта
+            </span>
+            <span className="account-page__tab-label account-page__tab-label--mobile">
+              Настройки
+            </span>
           </button>
         </div>
 
@@ -228,7 +236,7 @@ export const AccountPage = () => {
 
                 <div className="account-page__settings-item">
                   <div className="account-page__settings-icon">
-                    <img src={mailIcon} alt="" />
+                    <MailIcon className="account-page__settings-mail-icon" aria-hidden="true" />
                   </div>
 
                   <div className="account-page__settings-text">

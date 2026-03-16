@@ -174,7 +174,6 @@
 .account-page__settings-icon img {
   width: 26px;
   height: 26px;
-  opacity: 0.95;
   color: #ffffff;
 }
 
@@ -244,6 +243,10 @@
   line-height: 1.4;
 }
 
+.account-page__tab-label--mobile {
+  display: none;
+}
+
 @media (max-width: 1280px) {
   .account-page__favorites-grid {
     grid-template-columns: repeat(4, minmax(0, 224px));
@@ -258,6 +261,8 @@
   .account-page__settings-value {
     font-size: 24px;
   }
+
+  
 }
 
 @media (max-width: 767px) {
@@ -378,5 +383,13 @@
 
   .account-page__message {
     font-size: 16px;
+  }
+
+    .account-page__tab-label--desktop {
+    display: none;
+  }
+
+  .account-page__tab-label--mobile {
+    display: inline;
   }
 }

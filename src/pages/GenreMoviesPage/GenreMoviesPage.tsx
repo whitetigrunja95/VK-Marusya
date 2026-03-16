@@ -5,6 +5,7 @@ import { GenreMovieCard } from "../../components/GenreMovieCard/GenreMovieCard";
 import { MainLayout } from "../../layouts/MainLayout";
 import type { Movie } from "../../types/movie";
 import { getGenreTitle } from "../../utils/genreData";
+import backIcon from "../../assets/icons/back.svg";
 import "./GenreMoviesPage.css";
 
 const MOVIES_PER_PAGE = 10;
@@ -72,7 +73,7 @@ export const GenreMoviesPage = () => {
             to="/genres"
             aria-label="Назад к жанрам"
           >
-            ←
+            <img src={backIcon} alt="" />
           </Link>
 
           <h1 className="genre-movies-page__title">

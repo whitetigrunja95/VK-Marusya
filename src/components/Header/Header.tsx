@@ -208,7 +208,7 @@ export const Header = () => {
           <div className="header__actions">
             <div className="header__search-wrapper">
               <div className="header__search">
-                <span className="header__search-icon">⌕</span>
+                <SearchIcon className="header__search-icon" />
 
                 <input
                   className="header__search-input"

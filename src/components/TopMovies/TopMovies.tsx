@@ -60,8 +60,12 @@ export const TopMovies = () => {
             <div className="top-movies__poster-wrapper">
               <img
                 className="top-movies__poster"
-                src={movie.posterUrl}
+                src={movie.posterUrl || "/placeholder.png"}
                 alt={movie.title}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "/placeholder.png";
+                }}
               />
               <span className="top-movies__rank">{index + 1}</span>
             </div>

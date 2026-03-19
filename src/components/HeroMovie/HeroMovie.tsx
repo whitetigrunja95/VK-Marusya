@@ -336,9 +336,8 @@ export const HeroMovie = ({
               )}
 
               <button
-                className={`hero-movie__icon-button ui-icon-button${
-                  isFavorite ? " hero-movie__icon-button--active" : ""
-                }`}
+                className={`hero-movie__icon-button ui-icon-button${isFavorite ? " hero-movie__icon-button--active" : ""
+                  }`}
                 type="button"
                 aria-label={
                   isFavorite ? "Удалить из избранного" : "Добавить в избранное"
@@ -365,7 +364,14 @@ export const HeroMovie = ({
           </div>
 
           <div className="hero-movie__poster">
-            {imageUrl ? <img src={imageUrl} alt={movie.title} /> : null}
+            <img
+              src={imageUrl || "/placeholder.png"}
+              alt={movie.title}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "/placeholder.png";
+              }}
+            />
           </div>
         </div>
       </section>
